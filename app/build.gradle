@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'BimBom.DBI'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "BimBom.DBI"
