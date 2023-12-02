@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import BimBom.DBI.Model.PhotoModel;
+
 public class MainActivity extends AppCompatActivity {
 
-    private ImageDataModel imageDataModel;
+    private PhotoModel photoModel;
     private Button upload,camera,gallery;
     private ImageView imageView;
 
@@ -16,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        imageDataModel = new ImageDataModel(this);
+        photoModel = new PhotoModel(this);
     }
 
     private void initView(){
