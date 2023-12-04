@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class PhotoModel {
-    private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
-    private Activity activity;  // Dodana referencja do Activity
+    private String imagePath;
 
-    public PhotoModel(Activity activity) {
-        this.activity = activity;
-        this.sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+    public PhotoModel(String imagePath) {
+        this.imagePath = imagePath;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
 }
