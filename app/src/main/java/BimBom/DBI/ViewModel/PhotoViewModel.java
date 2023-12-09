@@ -1,15 +1,13 @@
-package BimBom.DBI;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
+package BimBom.DBI.ViewModel;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.io.ByteArrayOutputStream;
-
 import BimBom.DBI.ApiService.ApiService;
 import BimBom.DBI.Model.PhotoModel;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import pub.devrel.easypermissions.BuildConfig;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,63 +15,34 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotoViewModel extends ViewModel {
-    private MutableLiveData<PhotoModel> selectedPhoto = new MutableLiveData<>();
     private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
 
     public MutableLiveData<String> getUploadStatus() {
         return uploadStatus;
     }
 
-    public MutableLiveData<PhotoModel> getSelectedPhoto() {
-        if (selectedPhoto.getValue() == null) {
-            // Jeśli selectedPhoto jest null, zainicjuj nowy obiekt PhotoModel
-            selectedPhoto.setValue(new PhotoModel(""));
-        }
-        return selectedPhoto;
+    public void setPhoto(PhotoModel photoModel) {
+        sendImageToApi(photoModel);
     }
 
-    public void setPhoto(String imagePath) {
-        // Convert the image to Base64
-        String base64Image = convertImageToBase64(imagePath);
+    private void sendImageToApi(PhotoModel photoModel) {
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        // Send the Base64 image to the REST API
-        sendImageToApi(base64Image);
-    }
-
-    private String convertImageToBase64(String imagePath) {
-        // Convert the image to byte array
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        // Load the image from file
-        Bitmap photo = BitmapFactory.decodeFile(imagePath);
-
-        if (photo != null) {
-            // Convert byte array to Base64
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            return Base64.encodeToString(byteArray, Base64.DEFAULT);
-        } else {
-            // Handle the case when the image couldn't be loaded
-            // For now, return an empty string, but you might want to handle it differently based on your requirements.
-            return "";
-        }
-    }
-
-    private void sendImageToApi(String base64Image) {
-        // Retrofit setup
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://localhost:7219/swagger/index.html/")
-                .addConverterFactory(GsonConverterFactory.create())
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
                 .build();
 
-        // Create API service
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://10.0.2.2:7219/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
         ApiService apiService = retrofit.create(ApiService.class);
 
-        // Create PhotoModel with Base64 image
-        PhotoModel photoModel = new PhotoModel(base64Image);
+        Call<String> call = apiService.uploadPhoto(photoModel.getBase64Image());
 
-        // Send the photo to the API
-        Call<String> call = apiService.uploadPhoto(photoModel);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
