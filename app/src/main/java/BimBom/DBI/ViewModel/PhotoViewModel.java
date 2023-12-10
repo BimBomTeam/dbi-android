@@ -9,6 +9,7 @@ import javax.net.ssl.X509TrustManager;
 
 import BimBom.DBI.ApiService.ApiService;
 import BimBom.DBI.Model.PhotoModel;
+import BimBom.DBI.Utils.UnsafeOkHttpClient;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -42,13 +43,13 @@ public class PhotoViewModel extends ViewModel {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
-                .sslSocketFactory(context.getSocketFactory(), trustManager)
-                .build();
-
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .addInterceptor(loggingInterceptor)
+//                .sslSocketFactory(context.getSocketFactory(), trustManager)
+//                .build();
+        OkHttpClient client = UnsafeOkHttpClient.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://10.0.2.2:44353/")
+                .baseUrl("https://10.0.2.2:7219/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

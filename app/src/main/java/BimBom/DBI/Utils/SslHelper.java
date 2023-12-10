@@ -21,7 +21,7 @@ public class SslHelper {
         try {
             // Załaduj certyfikat
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            InputStream caInput = context.getResources().openRawResource(R.raw.cert); // Zastąp 'your_certificate' nazwą pliku certyfikatu
+            InputStream caInput = context.getResources().openRawResource(R.raw.certificate);
             X509Certificate ca = (X509Certificate) cf.generateCertificate(caInput);
             caInput.close();
 
