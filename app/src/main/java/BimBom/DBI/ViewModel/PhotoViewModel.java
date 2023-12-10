@@ -1,5 +1,8 @@
 package BimBom.DBI.ViewModel;
 
+import android.util.Log;
+import android.view.View;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -23,6 +26,16 @@ public class PhotoViewModel extends ViewModel {
     private SSLContext context;
     private X509TrustManager trustManager;
     private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
+    private MutableLiveData<Boolean> progressBarVisibility = new MutableLiveData<>();
+    private MutableLiveData<String> responseFromServer = new MutableLiveData<>();
+
+    public MutableLiveData<Boolean> getProgressBarVisibility() {
+        return progressBarVisibility;
+    }
+
+    public MutableLiveData<String> getResponseFromServer() {
+        return responseFromServer;
+    }
 
     public MutableLiveData<String> getUploadStatus() {
         return uploadStatus;
@@ -31,23 +44,20 @@ public class PhotoViewModel extends ViewModel {
     public void setPhoto(PhotoModel photoModel) {
         sendImageToApi(photoModel);
     }
-    public void setSslContext(SSLContext context)
-    {
+
+    public void setSslContext(SSLContext context) {
         this.context = context;
     }
-    public void setTrustManager(X509TrustManager manager)
-    {
+
+    public void setTrustManager(X509TrustManager manager) {
         this.trustManager = manager;
     }
 
     private void sendImageToApi(PhotoModel photoModel) {
+        progressBarVisibility.setValue(true);
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .addInterceptor(loggingInterceptor)
-//                .sslSocketFactory(context.getSocketFactory(), trustManager)
-//                .build();
         OkHttpClient client = UnsafeOkHttpClient.getUnsafeOkHttpClient();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://10.0.2.2:7219/")
@@ -63,16 +73,39 @@ public class PhotoViewModel extends ViewModel {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    uploadStatus.setValue("Zdjęcie zostało pomyślnie przesłane");
+                    // Zdjęcie zostało przesłane pomyślnie, możesz przetwarzać odpowiedź
+                    String responseData = response.body();
+                    Log.d("CHUJ", "Odpowiedź: " + responseData);
+                    if (responseData != null && !responseData.isEmpty()) {
+                        // Przetwarzanie danych odpowiedzi
+                        receiveResponseFromServer(responseData);
+                    } else {
+                        // Odpowiedź z serwera jest pusta lub niepoprawna
+                        uploadStatus.setValue("Odpowiedź z serwera jest pusta lub niepoprawna");
+                    }
                 } else {
-                    uploadStatus.setValue("Błąd podczas przesyłania zdjęcia");
+                    // Błąd podczas przesyłania zdjęcia - kod stanu odpowiedzi HTTP nie jest OK
+                    uploadStatus.setValue("Błąd podczas przesyłania zdjęcia. Kod: " + response.code());
+                    // Tutaj możesz także dodać logikę obsługi różnych kodów stanu odpowiedzi
+                    // np. 404 - nie znaleziono, 500 - błąd serwera, itp.
                 }
+                progressBarVisibility.setValue(false);
+
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
+                // Błąd podczas przesyłania żądania
+                Log.d("CWEL", "kurwa ");
                 uploadStatus.setValue("Błąd podczas przesyłania zdjęcia: " + t.getMessage());
+                progressBarVisibility.setValue(false);
             }
         });
+
+    }
+
+    private void receiveResponseFromServer(String response) {
+        // Logika odbierania odpowiedzi z serwera
+        responseFromServer.setValue(response);
     }
 }

@@ -15,6 +15,8 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private Button btnGallery;
     private Button btnUpload;
     private Bitmap photo;
+    private TextView twResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         btnCamera = findViewById(R.id.btnCamera);
         btnGallery = findViewById(R.id.btnGallery);
         btnUpload = findViewById(R.id.btnUpload);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        twResult = findViewById(R.id.tvResult);
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +86,21 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         });
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
+        photoViewModel.getResponseFromServer().observe(this, response -> {
+            // Aktualizacja twResult na podstawie odebranej odpowiedzi
+            twResult.setText(response);
+        });
+        photoViewModel.getProgressBarVisibility().observe(this, visible -> {
+            if (visible != null) {
+                if (visible) {
+                    // Pokaż progressBar
+                    progressBar.setVisibility(View.VISIBLE);
+                } else {
+                    // Ukryj progressBar
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
                     photoViewModel.setSslContext(sslContext);
                     photoViewModel.setTrustManager(trustManager);
-
                     photoViewModel.setPhoto(photoModel);
                 } else {
                     Toast.makeText(MainActivity.this, "Proszę wybrać zdjęcie", Toast.LENGTH_SHORT).show();
