@@ -11,7 +11,6 @@ import okhttp3.OkHttpClient;
 public class UnsafeOkHttpClient {
     public static OkHttpClient getUnsafeOkHttpClient() {
         try {
-            // Utwórz niestandardowy menedżer zaufania, który nie sprawdza certyfikatów
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
                         @Override
@@ -29,11 +28,9 @@ public class UnsafeOkHttpClient {
                     }
             };
 
-            // Zainstaluj powyższy menedżer zaufania
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
 
-            // Utwórz OkHttp klienta, który ignoruje weryfikację SSL
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager)trustAllCerts[0]);
             builder.hostnameVerifier(new HostnameVerifier() {

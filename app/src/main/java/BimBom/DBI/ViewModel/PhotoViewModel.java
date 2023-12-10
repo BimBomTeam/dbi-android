@@ -8,6 +8,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import BimBom.DBI.ApiService.ApiService;
+import BimBom.DBI.Model.Dto.IdentifyRequestDto;
 import BimBom.DBI.Model.PhotoModel;
 import BimBom.DBI.Utils.UnsafeOkHttpClient;
 import okhttp3.OkHttpClient;
@@ -56,7 +57,7 @@ public class PhotoViewModel extends ViewModel {
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<String> call = apiService.uploadPhoto(photoModel.getBase64Image());
+        Call<String> call = apiService.uploadPhoto(new IdentifyRequestDto(photoModel.getBase64Image()));
 
         call.enqueue(new Callback<String>() {
             @Override
