@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,7 +27,12 @@ import java.io.IOException;
 
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import BimBom.DBI.Model.PhotoModel;
+import BimBom.DBI.Utils.SslHelper;
 import BimBom.DBI.ViewModel.PhotoViewModel;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -81,6 +87,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 if (imageView.getDrawable() != null) {
                     PhotoModel photoModel = new PhotoModel(imageView); // Przekazujemy ImageView do PhotoModel
                     PhotoViewModel photoViewModel = new ViewModelProvider(MainActivity.this).get(PhotoViewModel.class);
+                    Pair<SSLContext, X509TrustManager> sslPair = SslHelper.createSSLContext(getApplicationContext());
+                    SSLContext sslContext = sslPair.first;
+                    X509TrustManager trustManager = sslPair.second;
+
+                    photoViewModel.setSslContext(sslContext);
+                    photoViewModel.setTrustManager(trustManager);
+
                     photoViewModel.setPhoto(photoModel);
                 } else {
                     Toast.makeText(MainActivity.this, "Proszę wybrać zdjęcie", Toast.LENGTH_SHORT).show();

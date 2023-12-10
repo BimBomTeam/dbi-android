@@ -3,11 +3,14 @@ package BimBom.DBI.ViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import BimBom.DBI.ApiService.ApiService;
 import BimBom.DBI.Model.PhotoModel;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import pub.devrel.easypermissions.BuildConfig;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,6 +18,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotoViewModel extends ViewModel {
+    private SSLContext context;
+    private X509TrustManager trustManager;
     private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
 
     public MutableLiveData<String> getUploadStatus() {
@@ -24,6 +29,14 @@ public class PhotoViewModel extends ViewModel {
     public void setPhoto(PhotoModel photoModel) {
         sendImageToApi(photoModel);
     }
+    public void setSslContext(SSLContext context)
+    {
+        this.context = context;
+    }
+    public void setTrustManager(X509TrustManager manager)
+    {
+        this.trustManager = manager;
+    }
 
     private void sendImageToApi(PhotoModel photoModel) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -31,10 +44,11 @@ public class PhotoViewModel extends ViewModel {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
+                .sslSocketFactory(context.getSocketFactory(), trustManager)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://10.0.2.2:7219/")
+                .baseUrl("https://10.0.2.2:44353/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
