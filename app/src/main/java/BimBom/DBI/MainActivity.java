@@ -33,6 +33,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.Model.PhotoModel;
 import BimBom.DBI.Utils.SslHelper;
 import BimBom.DBI.ViewModel.PhotoViewModel;
@@ -86,17 +87,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         });
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
-        photoViewModel.getResponseFromServer().observe(this, response -> {
-            // Aktualizacja twResult na podstawie odebranej odpowiedzi
-            twResult.setText(response);
+        photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
+            if (identifyResponseDto != null) {
+                twResult.setVisibility(View.VISIBLE);
+                twResult.setText(identifyResponseDto.name);
+            }
         });
+
         photoViewModel.getProgressBarVisibility().observe(this, visible -> {
             if (visible != null) {
                 if (visible) {
-                    // Pokaż progressBar
                     progressBar.setVisibility(View.VISIBLE);
                 } else {
-                    // Ukryj progressBar
+
                     progressBar.setVisibility(View.GONE);
                 }
             }
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             @Override
             public void onClick(View view) {
                 if (imageView.getDrawable() != null) {
-                    PhotoModel photoModel = new PhotoModel(imageView); // Przekazujemy ImageView do PhotoModel
+                    PhotoModel photoModel = new PhotoModel(imageView);
                     PhotoViewModel photoViewModel = new ViewModelProvider(MainActivity.this).get(PhotoViewModel.class);
                     Pair<SSLContext, X509TrustManager> sslPair = SslHelper.createSSLContext(getApplicationContext());
                     SSLContext sslContext = sslPair.first;
@@ -114,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     photoViewModel.setSslContext(sslContext);
                     photoViewModel.setTrustManager(trustManager);
                     photoViewModel.setPhoto(photoModel);
+
                 } else {
                     Toast.makeText(MainActivity.this, "Proszę wybrać zdjęcie", Toast.LENGTH_SHORT).show();
                 }

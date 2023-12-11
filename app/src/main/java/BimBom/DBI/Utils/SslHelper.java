@@ -19,23 +19,19 @@ public class SslHelper {
 
     public static Pair<SSLContext, X509TrustManager> createSSLContext(Context context) {
         try {
-            // Załaduj certyfikat
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             InputStream caInput = context.getResources().openRawResource(R.raw.certificate);
             X509Certificate ca = (X509Certificate) cf.generateCertificate(caInput);
             caInput.close();
 
-            // Stwórz KeyStore zawierający nasz certyfikat
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
             keyStore.load(null, null);
             keyStore.setCertificateEntry("ca", ca);
 
-            // Użyj KeyStore do stworzenia TrustManager
             String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
             tmf.init(keyStore);
 
-            // Stwórz SSLContext z TrustManager
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, tmf.getTrustManagers(), null);
 

@@ -6,18 +6,23 @@ import android.view.View;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import BimBom.DBI.ApiService.ApiService;
 import BimBom.DBI.Model.Dto.IdentifyRequestDto;
+import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.Model.PhotoModel;
 import BimBom.DBI.Utils.UnsafeOkHttpClient;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -28,7 +33,10 @@ public class PhotoViewModel extends ViewModel {
     private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
     private MutableLiveData<Boolean> progressBarVisibility = new MutableLiveData<>();
     private MutableLiveData<String> responseFromServer = new MutableLiveData<>();
-
+    private MutableLiveData<IdentifyResponseDto> identifyResponseLiveData = new MutableLiveData<>();
+    public MutableLiveData<IdentifyResponseDto> getIdentifyResponseLiveData() {
+        return identifyResponseLiveData;
+    }
     public MutableLiveData<Boolean> getProgressBarVisibility() {
         return progressBarVisibility;
     }
@@ -58,7 +66,12 @@ public class PhotoViewModel extends ViewModel {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient client = UnsafeOkHttpClient.getUnsafeOkHttpClient();
+        OkHttpClient.Builder clientBuilder = UnsafeOkHttpClient.getUnsafeOkHttpClient().newBuilder();
+        clientBuilder.readTimeout(200, TimeUnit.SECONDS); // Zwiększenie timeout'u odczytu odpowiedzi
+        clientBuilder.writeTimeout(200, TimeUnit.SECONDS); // Zwiększenie timeout'u zapisu żądania
+
+        OkHttpClient client = clientBuilder.build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://10.0.2.2:7219/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -67,45 +80,32 @@ public class PhotoViewModel extends ViewModel {
 
         ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<String> call = apiService.uploadPhoto(new IdentifyRequestDto(photoModel.getBase64Image()));
+        Call<IdentifyResponseDto> call = apiService.uploadPhoto(new IdentifyRequestDto(photoModel.getBase64Image()));
 
-        call.enqueue(new Callback<String>() {
+        call.enqueue(new Callback<IdentifyResponseDto>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<IdentifyResponseDto> call, Response<IdentifyResponseDto> response) {
                 if (response.isSuccessful()) {
-                    // Zdjęcie zostało przesłane pomyślnie, możesz przetwarzać odpowiedź
-                    String responseData = response.body();
-                    Log.d("CHUJ", "Odpowiedź: " + responseData);
-                    if (responseData != null && !responseData.isEmpty()) {
-                        // Przetwarzanie danych odpowiedzi
-                        receiveResponseFromServer(responseData);
-                    } else {
-                        // Odpowiedź z serwera jest pusta lub niepoprawna
-                        uploadStatus.setValue("Odpowiedź z serwera jest pusta lub niepoprawna");
-                    }
+                    IdentifyResponseDto identifyResponseDto = response.body();
+                    identifyResponseLiveData.setValue(identifyResponseDto);
                 } else {
-                    // Błąd podczas przesyłania zdjęcia - kod stanu odpowiedzi HTTP nie jest OK
                     uploadStatus.setValue("Błąd podczas przesyłania zdjęcia. Kod: " + response.code());
-                    // Tutaj możesz także dodać logikę obsługi różnych kodów stanu odpowiedzi
-                    // np. 404 - nie znaleziono, 500 - błąd serwera, itp.
                 }
                 progressBarVisibility.setValue(false);
-
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                // Błąd podczas przesyłania żądania
-                Log.d("CWEL", "kurwa ");
-                uploadStatus.setValue("Błąd podczas przesyłania zdjęcia: " + t.getMessage());
+            public void onFailure(Call<IdentifyResponseDto> call, Throwable t) {
+                Log.e("Error", "Błąd podczas przesyłania zdjęcia: " + t.getMessage());
                 progressBarVisibility.setValue(false);
             }
         });
-
     }
-
     private void receiveResponseFromServer(String response) {
-        // Logika odbierania odpowiedzi z serwera
-        responseFromServer.setValue(response);
+        if (response instanceof String) {
+            responseFromServer.setValue(response);
+        } else {
+            Log.e("data Type Error", "Otrzymano nieprawidłowy typ danych w odpowiedzi z serwera");
+        }
     }
 }
