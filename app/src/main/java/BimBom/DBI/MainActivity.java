@@ -23,7 +23,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.IOException;
 
@@ -54,8 +57,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private Button btnCamera;
     private Button btnGallery;
     private Button btnUpload;
+    private Button btnMenu;
     private Bitmap photo;
     private TextView twResult;
+    private NavigationView nvMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         btnUpload = findViewById(R.id.btnUpload);
         ProgressBar progressBar = findViewById(R.id.progressBar);
         twResult = findViewById(R.id.tvResult);
+        nvMenu = findViewById(R.id.nvMenu);
+        btnMenu = findViewById(R.id.btnMenu);
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +100,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 twResult.setText(identifyResponseDto.name);
             }
         });
-
+        photoViewModel.getErrorLiveData().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
         photoViewModel.getProgressBarVisibility().observe(this, visible -> {
             if (visible != null) {
                 if (visible) {
@@ -123,6 +134,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 }
             }
         });
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+                drawerLayout.openDrawer(nvMenu);
+            }
+        });
     }
 
     private void checkCameraPermission() {
@@ -147,18 +165,25 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 Bundle extras = data.getExtras();
                 if (extras != null) {
                     photo = (Bitmap) extras.get("data");
-                    imageView.setImageBitmap(photo);
+                    setScaledImage(photo);
                 }
             } else if (requestCode == REQUEST_GALLERY && data != null) {
                 Uri selectedImage = data.getData();
                 try {
                     photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-                    imageView.setImageBitmap(photo);
+                    setScaledImage(photo);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    private void setScaledImage(Bitmap originalBitmap) {
+        int newWidth = 800;
+        int newHeight = 800;
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
+        imageView.setImageBitmap(scaledBitmap);
     }
     private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

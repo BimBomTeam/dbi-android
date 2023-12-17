@@ -34,6 +34,10 @@ public class PhotoViewModel extends ViewModel {
     private MutableLiveData<Boolean> progressBarVisibility = new MutableLiveData<>();
     private MutableLiveData<String> responseFromServer = new MutableLiveData<>();
     private MutableLiveData<IdentifyResponseDto> identifyResponseLiveData = new MutableLiveData<>();
+    private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> getErrorLiveData() {
+        return errorLiveData;
+    }
     public MutableLiveData<IdentifyResponseDto> getIdentifyResponseLiveData() {
         return identifyResponseLiveData;
     }
@@ -97,15 +101,9 @@ public class PhotoViewModel extends ViewModel {
             @Override
             public void onFailure(Call<IdentifyResponseDto> call, Throwable t) {
                 Log.e("Error", "Błąd podczas przesyłania zdjęcia: " + t.getMessage());
+                errorLiveData.setValue("Błąd podczas przesyłania zdjęcia: " + t.getMessage());
                 progressBarVisibility.setValue(false);
             }
         });
-    }
-    private void receiveResponseFromServer(String response) {
-        if (response instanceof String) {
-            responseFromServer.setValue(response);
-        } else {
-            Log.e("data Type Error", "Otrzymano nieprawidłowy typ danych w odpowiedzi z serwera");
-        }
     }
 }
