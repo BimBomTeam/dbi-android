@@ -13,7 +13,9 @@
     </style>
     <style name="Theme.AndroidDBI.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.AndroidDBI.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    <style name="MenuTextStyle">
+    <!-- res/values/styles.xml -->
+    <style name="JuliusSansOneText">
         <item name="android:fontFamily">@font/julius_sans_one</item>
+        <item name="android:textColor">@color/greenColor</item>
     </style>
 </resources>
