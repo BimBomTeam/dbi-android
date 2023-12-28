@@ -17,5 +17,6 @@
     <style name="JuliusSansOneText">
         <item name="android:fontFamily">@font/julius_sans_one</item>
         <item name="android:textColor">@color/greenColor</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

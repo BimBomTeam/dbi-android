@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_item_login"
-        android:title="@string/Login" />
+        android:title="@string/login" />
 
     <item
         android:id="@+id/menu_item_settings"
-        android:title="@string/Settings" />
+        android:title="@string/settings" />
 
     <item
         android:id="@+id/menu_item_help"
-        android:title="@string/Help" />
+        android:title="@string/help" />
 </menu>

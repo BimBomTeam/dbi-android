@@ -1,5 +1,8 @@
 package BimBom.DBI.ViewModel;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
@@ -14,6 +17,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import BimBom.DBI.ApiService.ApiService;
+import BimBom.DBI.DogBreedActivity;
+import BimBom.DBI.MainActivity;
 import BimBom.DBI.Model.Dto.IdentifyRequestDto;
 import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.Model.PhotoModel;
@@ -71,8 +76,8 @@ public class PhotoViewModel extends ViewModel {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder clientBuilder = UnsafeOkHttpClient.getUnsafeOkHttpClient().newBuilder();
-        clientBuilder.readTimeout(200, TimeUnit.SECONDS); // Zwiększenie timeout'u odczytu odpowiedzi
-        clientBuilder.writeTimeout(200, TimeUnit.SECONDS); // Zwiększenie timeout'u zapisu żądania
+        clientBuilder.readTimeout(200, TimeUnit.SECONDS);
+        clientBuilder.writeTimeout(200, TimeUnit.SECONDS);
 
         OkHttpClient client = clientBuilder.build();
 
