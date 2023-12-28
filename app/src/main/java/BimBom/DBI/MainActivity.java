@@ -163,11 +163,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     startActivity(settingsIntent);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
+                } else if (id == R.id.menu_item_login) {
+                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    return true;
                 } else {
                     return false;
                 }
             }
         });
+
 
         btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
