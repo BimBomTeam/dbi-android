@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -71,37 +70,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        progressDialog = new Dialog(this);
-        progressDialog.setContentView(R.layout.progress_dialog);
-        imageView = findViewById(R.id.imageView);
-        btnCamera = findViewById(R.id.btnCamera);
-        btnGallery = findViewById(R.id.btnGallery);
-        btnUpload = findViewById(R.id.btnUpload);
-        btnMenu = findViewById(R.id.btnMenu);
-        btnHistory = findViewById(R.id.btnHistory);
-        nvMenu = findViewById(R.id.nvMenu);
-        menu_item_login = findViewById(R.id.menu_item_login);
-        menu_item_settings = findViewById(R.id.menu_item_settings);
-        menu_item_help = findViewById(R.id.menu_item_help);
-        Drawable drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
-        progressDialog.getWindow().setBackgroundDrawable(drawable);
-        btnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkCameraPermission();
-            }
-        });
 
-        btnGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (EasyPermissions.hasPermissions(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    openGallery();
-                } else {
-                    requestStoragePermission();
-                }
-            }
-        });
+        initializeViews();
 
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
         photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
@@ -119,34 +89,44 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void initializeViews() {
+        progressDialog = new Dialog(this);
+        progressDialog.setContentView(R.layout.progress_dialog);
 
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (photo != null) {
-                    progressDialog.show();
-                    PhotoModel photoModel = new PhotoModel(unscaledPhoto);
-                    PhotoViewModel photoViewModel = new ViewModelProvider(MainActivity.this).get(PhotoViewModel.class);
-                    Pair<SSLContext, X509TrustManager> sslPair = SslHelper.createSSLContext(getApplicationContext());
-                    SSLContext sslContext = sslPair.first;
-                    X509TrustManager trustManager = sslPair.second;
-                    photoViewModel.setSslContext(sslContext);
-                    photoViewModel.setTrustManager(trustManager);
-                    photoViewModel.setPhoto(photoModel);
-                } else {
-                    Toast.makeText(MainActivity.this, "Proszę wybrać zdjęcie", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
-        btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
-                drawerLayout.openDrawer(nvMenu);
-            }
-        });
+        if (progressDialog.getWindow() != null) {
+            Drawable  drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
+            progressDialog.getWindow().setBackgroundDrawable(drawable);
+        }
 
+        imageView = findViewById(R.id.imageView);
+        btnCamera = findViewById(R.id.btnCamera);
+        btnGallery = findViewById(R.id.btnGallery);
+        btnUpload = findViewById(R.id.btnUpload);
+        btnMenu = findViewById(R.id.btnMenu);
+        btnHistory = findViewById(R.id.btnHistory);
+        nvMenu = findViewById(R.id.nvMenu);
+        menu_item_login = findViewById(R.id.menu_item_login);
+        menu_item_settings = findViewById(R.id.menu_item_settings);
+        menu_item_help = findViewById(R.id.menu_item_help);
+
+        setButtonClickListeners();
+
+
+        setNavigationViewListener();
+    }
+    private void setButtonClickListeners() {
+        setClickListener(btnUpload, this::onClickButtonUpload);
+        setClickListener(btnHistory, this::onClickButtonHistory);
+        setClickListener(btnMenu, this::onClickButtonMenu);
+        setClickListener(btnGallery, this::onClickButtonGallery);
+        setClickListener(btnCamera, this::onClickButtonCamera);
+    }
+    private void setClickListener(View view, View.OnClickListener listener) {
+        view.setOnClickListener(listener);
+    }
+    private void setNavigationViewListener() {
         nvMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -173,18 +153,48 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 }
             }
         });
-
-
-        btnHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
-                View bottomSheetView = getLayoutInflater().inflate(R.layout.dogs_history, null);
-                bottomSheetDialog.setContentView(bottomSheetView);
-                bottomSheetDialog.show();
-            }
-        });
     }
+
+    private void onClickButtonUpload(View view) {
+        if (photo != null) {
+            progressDialog.show();
+            PhotoModel photoModel = new PhotoModel(unscaledPhoto);
+            PhotoViewModel photoViewModel = new ViewModelProvider(MainActivity.this).get(PhotoViewModel.class);
+            Pair<SSLContext, X509TrustManager> sslPair = SslHelper.createSSLContext(getApplicationContext());
+            SSLContext sslContext = sslPair.first;
+            X509TrustManager trustManager = sslPair.second;
+            photoViewModel.setSslContext(sslContext);
+            photoViewModel.setTrustManager(trustManager);
+            photoViewModel.setPhoto(photoModel);
+        } else {
+            Toast.makeText(MainActivity.this, "Proszę wybrać zdjęcie", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onClickButtonHistory(View view) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.dogs_history, null);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
+
+    private void onClickButtonMenu(View view) {
+        DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        drawerLayout.openDrawer(nvMenu);
+    }
+
+    private void onClickButtonGallery(View view) {
+        if (EasyPermissions.hasPermissions(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            openGallery();
+        } else {
+            requestStoragePermission();
+        }
+    }
+
+    private void onClickButtonCamera(View view) {
+        checkCameraPermission();
+    }
+
 
     private void checkCameraPermission() {
         String[] perms = {Manifest.permission.CAMERA};
@@ -193,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         } else {
             EasyPermissions.requestPermissions(
                     new PermissionRequest.Builder(this, CAMERA_PERMISSION_REQUEST_CODE, perms)
-                            .setRationale("Aplikacja potrzebuje dostępu do aparatu")
+                            .setRationale(R.string.cameraPermission)
                             .setPositiveButtonText("OK")
                             .setNegativeButtonText("Anuluj")
                             .build()
@@ -212,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     unscaledPhoto = (Bitmap) extras.get("data");
                     setScaledImage(photo);
                 }
+
             } else if (requestCode == REQUEST_GALLERY && data != null) {
                 Uri selectedImage = data.getData();
                 try {
@@ -262,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openGallery();
             } else {
-                Toast.makeText(this, "Brak uprawnień do odczytu z pamięci zewnętrznej", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.PermissionExternalmemory, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -270,9 +281,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-            Toast.makeText(this, "Nie można otworzyć aparatu bez uprawnień", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.noHavePermissionCamera, Toast.LENGTH_SHORT).show();
         } else if (requestCode == GALLERY_PERMISSION_REQUEST_CODE) {
-            Toast.makeText(this, "Nie można otworzyć galerii bez uprawnień", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.noHavePermissionGallery, Toast.LENGTH_SHORT).show();
         }
     }
 

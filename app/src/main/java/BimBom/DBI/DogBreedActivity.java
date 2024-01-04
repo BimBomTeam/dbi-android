@@ -22,6 +22,7 @@ public class DogBreedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_breed);
+
         ivPhoto = findViewById(R.id.ivPhoto);
         tvName = findViewById(R.id.tvName);
         tvDescription = findViewById(R.id.tvDescription);
@@ -42,4 +43,5 @@ public class DogBreedActivity extends AppCompatActivity {
             }
         });
     }
+
 }

@@ -14,7 +14,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        btnBack = findViewById(R.id.btnBack);
+        initializeViews();
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -22,4 +22,17 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
     }
+    private void initializeViews() {
+        btnBack = findViewById(R.id.btnBack);
+        setClickButtonBack();
+    }
+    private void setClickButtonBack(){
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
 }

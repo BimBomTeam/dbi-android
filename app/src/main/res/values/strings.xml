@@ -17,4 +17,9 @@
     <string name="clear_history">CLEAR HISTORY</string>\
     <string name="delete_account">DELETE ACCOUNT</string>
     <string name="logout">LOG OUT</string>
+    <string name="cameraPermission"> Aplikacja potrzebuje dostępu do aparatu </string>
+    <string name="noHavePermissionCamera">Nie można otworzyć aparatu bez uprawnień</string>
+    <string name="noHavePermissionGallery">Nie można otworzyć galerii bez uprawnień</string>
+    <string name="PermissionExternalmemory">Brak uprawnień do odczytu z pamięci zewnętrznej</string>
+    
 </resources>
