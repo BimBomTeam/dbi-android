@@ -9,7 +9,9 @@
     <string name="action_settings">Settings</string>
     <string name="menu_gallery">Gallery</string>
     <string name="login">LOGIN</string>
+    <string name="Registration">Registration</string>
     <string name="settings">SETTINGS</string>
+    <string name="default_web_client_id">377101215236-fgh1sgrfe3sms78vmi5cidodn2jamfie.apps.googleusercontent.com</string>
     <string name="help">HELP</string>
     <string name="help_message">If you have a problem with the application</string>
     <string name="email_address">koval22887@stud.akademiabialska.pl</string>
@@ -21,5 +23,5 @@
     <string name="noHavePermissionCamera">Nie można otworzyć aparatu bez uprawnień</string>
     <string name="noHavePermissionGallery">Nie można otworzyć galerii bez uprawnień</string>
     <string name="PermissionExternalmemory">Brak uprawnień do odczytu z pamięci zewnętrznej</string>
-    
+
 </resources>

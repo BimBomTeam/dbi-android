@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".RegistrationActivity">
 
     <View
         android:id="@+id/_bg__main_menu"
@@ -31,6 +31,36 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <TextView
+        android:id="@+id/by_bim_bom_team"
+        android:layout_width="180dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center_horizontal|center"
+        android:layout_marginTop="136dp"
+        android:autoSizeMaxTextSize="20sp"
+        android:ellipsize="none"
+        android:fontFamily="@font/julius_sans_one"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="@string/by_bim_bom_team_string"
+        android:textColor="@color/dog_breed_color"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu" />
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="53dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/rounded_button_background"
+        android:drawableTop="?attr/actionModeCloseDrawable"
+        android:paddingTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+    <TextView
         android:id="@+id/dog_breed"
         android:layout_width="213dp"
         android:layout_height="106dp"
@@ -48,30 +78,11 @@
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
         app:layout_constraintVertical_bias="1.0" />
 
-    <TextView
-        android:id="@+id/by_bim_bom_team"
-        android:layout_width="match_parent"
-        android:layout_height="22dp"
-        android:layout_gravity="center_horizontal|center"
-        android:layout_marginTop="136dp"
-        android:autoSizeMaxTextSize="20sp"
-        android:ellipsize="none"
-        android:fontFamily="@font/julius_sans_one"
-        android:gravity="center"
-        android:singleLine="true"
-        android:text="@string/by_bim_bom_team_string"
-        android:textColor="@color/dog_breed_color"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu" />
-
     <EditText
         android:id="@+id/etLogin"
         android:layout_width="268dp"
-        android:layout_height="68dp"
-        android:layout_marginBottom="331dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="330dp"
         android:background="@drawable/rounded_edit_text"
         android:ems="10"
         android:hint="Login"
@@ -82,53 +93,27 @@
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.996"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnLoginWithGoogle"
-        android:layout_width="193dp"
-        android:layout_height="38dp"
-        android:layout_marginBottom="60dp"
-        android:background="@drawable/login_buttons"
-        android:drawableEnd="@drawable/google"
-        android:drawablePadding="-20dp"
-        android:paddingRight="35dp"
-        android:text="LOG IN WITH"
-        android:textColor="@color/rectangle_6_color"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.977"
+        app:layout_constraintVertical_bias="0.903"
         tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="53dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/rounded_button_background"
-        android:drawableTop="?attr/actionModeCloseDrawable"
-        android:paddingTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="193dp"
-        android:layout_height="59dp"
-        android:layout_marginBottom="175dp"
-        android:background="@drawable/rounded_button_background"
-        android:text="Login"
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="268dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="320dp"
+        android:background="@drawable/rounded_edit_text"
+        android:ems="10"
+        android:hint="E-mail"
+        android:inputType="text"
+        android:paddingLeft="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.979"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -145,30 +130,68 @@
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="268dp"
-        android:layout_height="68dp"
-        android:layout_marginBottom="257dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="275dp"
         android:background="@drawable/rounded_edit_text"
         android:ems="10"
         android:hint="Password"
-        android:inputType="textPassword"
+        android:inputType="numberPassword"
         android:paddingLeft="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/etPasswordRepeat"
+        android:layout_width="268dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="223dp"
+        android:background="@drawable/rounded_edit_text"
+        android:ems="10"
+        android:hint="Repeat Password"
+        android:inputType="numberPassword"
+        android:paddingLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
+        app:layout_constraintVertical_bias="0.985"
+        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
     <Button
-        android:id="@+id/btnRegistration"
+        android:id="@+id/btnSingUp"
         android:layout_width="193dp"
         android:layout_height="59dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="160dp"
         android:background="@drawable/rounded_button_background"
-        android:text="@string/Registration"
+        android:text="SIGN UP"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="193dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="110dp"
+        android:background="@drawable/login_buttons"
+        android:drawableEnd="@drawable/google"
+        android:drawablePadding="-35dp"
+        android:paddingRight="50dp"
+        android:text="LOG IN WITH"
+        android:textColor="@color/rectangle_6_color"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 </androidx.constraintlayout.widget.ConstraintLayout>
