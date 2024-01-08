@@ -23,5 +23,11 @@
     <string name="noHavePermissionCamera">Nie można otworzyć aparatu bez uprawnień</string>
     <string name="noHavePermissionGallery">Nie można otworzyć galerii bez uprawnień</string>
     <string name="PermissionExternalmemory">Brak uprawnień do odczytu z pamięci zewnętrznej</string>
+    <string name="registration_successful">Rejestracja udana</string>
+    <string name="registration_failed">Rejestracja nieudana</string>
+    <string name="password_is_empty">Pole powtórz hasło nie może być puste</string>
+    <string name="password_is_same">Hasła nie są takie same</string>
+    <string name="email_is_empty">Pole e-mail nie może być puste</string>
+
 
 </resources>
