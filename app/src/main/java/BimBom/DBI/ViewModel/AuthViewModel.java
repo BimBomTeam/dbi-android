@@ -1,9 +1,12 @@
 package BimBom.DBI.ViewModel;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
+import java.io.Closeable;
+
 import BimBom.DBI.LoginActivity;
 import BimBom.DBI.Model.UserModel;
 import BimBom.DBI.R;
@@ -25,28 +30,54 @@ public class AuthViewModel extends ViewModel {
     private MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "AuthViewModel";
+    private Application application;
+
+    private Context context;
 
     public AuthViewModel() {
+
+    }
+    public void setContext(Context context) {
+        this.context = context;
     }
 
-    public AuthViewModel(Application application) {
+    public AuthViewModel(Application application, Context context) {
+        if (application == null || context == null) {
+            throw new IllegalArgumentException("Application or Context cannot be null");
+        }
+        this.application = application;
+        this.context = context;
+    }
+
+
+    private GoogleSignInClient getGoogleSignInClient(Application application) {
+        if (mGoogleSignInClient == null) {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(application.getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+
+            mGoogleSignInClient = GoogleSignIn.getClient(application, gso);
+            Log.d(TAG, "Web client ID: " + application.getString(R.string.default_web_client_id));
+        }
+        return mGoogleSignInClient;
+    }
+
+
+    public Intent getGoogleSignInIntent() {
+        if (context == null) {
+            throw new IllegalStateException("Context is null");
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(application.getString(R.string.default_web_client_id))
+                .requestIdToken(context.getResources().getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(application, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(context, gso);
+
+        return mGoogleSignInClient.getSignInIntent();
     }
 
-    public Intent getGoogleSignInIntent() {
-        if (mGoogleSignInClient != null) {
-            return mGoogleSignInClient.getSignInIntent();
-        } else {
-            // Możesz obsłużyć ten przypadek, np. przez logowanie błędu
-            Log.e(TAG, "GoogleSignInClient is null");
-            return null;
-        }
-    }
 
     public void handleGoogleSignInResult(Intent data, LoginActivity activity) {
         AuthCredential credential = getGoogleAuthCredential(data);
@@ -77,13 +108,16 @@ public class AuthViewModel extends ViewModel {
             GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data).getResult();
             if (account != null) {
                 String idToken = account.getIdToken();
-                return GoogleAuthProvider.getCredential(idToken, null);
+                if (idToken != null && !idToken.isEmpty()) {
+                    return GoogleAuthProvider.getCredential(idToken, null);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
 
     public void loginUser(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)

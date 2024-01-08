@@ -92,21 +92,22 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean fieldsValid = true;
 
         if (TextUtils.isEmpty(email)) {
-            emailET.setError(String.valueOf(R.string.email_is_empty ));
+            emailET.setError(getString(R.string.email_is_empty));
             fieldsValid = false;
         } else {
             emailET.setError(null);
         }
 
+
         if (TextUtils.isEmpty(password)) {
-            passwordET.setError(String.valueOf(R.string.password_is_empty));
+            passwordET.setError(getString(R.string.password_is_empty));
             fieldsValid = false;
         } else {
             passwordET.setError(null);
         }
 
         if (TextUtils.isEmpty(confirmPassword)) {
-            passwordRepeatET.setError(String.valueOf(R.string.password_is_empty));
+            passwordRepeatET.setError(getString(R.string.password_is_empty));
             fieldsValid = false;
         } else {
             passwordRepeatET.setError(null);
@@ -115,7 +116,7 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean passwordsMatch = password.equals(confirmPassword);
 
         if (!passwordsMatch) {
-            passwordRepeatET.setError(String.valueOf(R.string.password_is_same));
+            passwordRepeatET.setError(getString(R.string.password_is_same));
             fieldsValid = false;
         } else {
             passwordRepeatET.setError(null);
@@ -127,7 +128,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void checkEmailField() {
         String email = emailET.getText().toString().trim();
         if (TextUtils.isEmpty(email)) {
-            emailET.setError(String.valueOf(R.string.email_is_empty));
+            emailET.setError(getString(R.string.email_is_empty));
         } else {
             emailET.setError(null);
         }
@@ -138,13 +139,13 @@ public class RegistrationActivity extends AppCompatActivity {
         String confirmPassword = passwordRepeatET.getText().toString().trim();
 
         if (TextUtils.isEmpty(password)) {
-            passwordET.setError(String.valueOf(R.string.password_is_empty));
+            passwordET.setError(getString(R.string.password_is_empty));
         } else {
             passwordET.setError(null);
         }
 
         if (TextUtils.isEmpty(confirmPassword)) {
-            passwordRepeatET.setError(String.valueOf(R.string.password_is_same));
+            passwordRepeatET.setError(getString(R.string.password_is_same));
         } else {
             passwordRepeatET.setError(null);
         }
@@ -159,9 +160,9 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            showToast(String.valueOf(R.string.registration_successful));
+                            showToast(getString(R.string.registration_successful));
                         } else {
-                            showToast(String.valueOf(R.string.registration_failed));
+                            showToast(getString(R.string.registration_failed));
                         }
                     }
                 });

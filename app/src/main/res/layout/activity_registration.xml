@@ -79,23 +79,17 @@
         app:layout_constraintVertical_bias="1.0" />
 
 
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="268dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="310dp"
-        android:background="@drawable/rounded_edit_text"
-        android:ems="10"
-        android:hint="E-mail"
-        android:inputType="text"
-        android:paddingLeft="10dp"
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="135dp"
+        android:layout_height="191dp"
+        android:layout_marginBottom="270dp"
+        android:src="@drawable/logo1"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.475"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.905"
-        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -109,55 +103,11 @@
         android:paddingLeft="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.915"
+        app:layout_constraintVertical_bias="0.953"
         tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
-
-    <EditText
-        android:id="@+id/etPasswordRepeat"
-        android:layout_width="268dp"
-        android:layout_height="39dp"
-        android:layout_marginBottom="220dp"
-        android:background="@drawable/rounded_edit_text"
-        android:ems="10"
-        android:hint="Repeat Password"
-        android:inputType="textPassword"
-        android:paddingLeft="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.475"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.923"
-        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="135dp"
-        android:layout_height="191dp"
-        android:layout_marginBottom="270dp"
-        android:src="@drawable/logo1"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/btnSingUp"
-        android:layout_width="193dp"
-        android:layout_height="59dp"
-        android:layout_marginBottom="150dp"
-        android:background="@drawable/rounded_button_background"
-        android:text="SIGN UP"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.965"
-        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/button2"
@@ -174,6 +124,58 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.969"
+        app:layout_constraintVertical_bias="0.966"
         tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+
+    <Button
+        android:id="@+id/btnSingUp"
+        android:layout_width="193dp"
+        android:layout_height="59dp"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/rounded_button_background"
+        android:enabled="false"
+        android:text="SIGN UP"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
+        app:layout_constraintVertical_bias="0.961"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="268dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="310dp"
+        android:background="@drawable/rounded_edit_text"
+        android:ems="10"
+        android:hint="E-mail"
+        android:inputType="text"
+        android:paddingLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
+        app:layout_constraintVertical_bias="0.947"
+        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+
+    <EditText
+        android:id="@+id/etPasswordRepeat"
+        android:layout_width="268dp"
+        android:layout_height="39dp"
+        android:layout_marginBottom="220dp"
+        android:background="@drawable/rounded_edit_text"
+        android:ems="10"
+        android:hint="Repeat Password"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
+        app:layout_constraintVertical_bias="0.957"
+        tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

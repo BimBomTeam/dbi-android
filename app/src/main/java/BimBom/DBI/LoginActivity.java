@@ -1,10 +1,13 @@
 package BimBom.DBI;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,7 +17,9 @@ import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etLogin, etPassword;
-    private Button btnLogin, btnLoginWithGoogle, btnRegistration, btnBack;
+    private Button btnLogin, btnLoginWithGoogle, btnRegistration, btnBack, btnOk;
+    private Dialog loginDialog;
+    private TextView tvSignInfo;
     private AuthViewModel authViewModel;
     private static final int RC_GOOGLE_SIGN_IN = 1001;
 
@@ -28,12 +33,36 @@ public class LoginActivity extends AppCompatActivity {
         btnLoginWithGoogle = findViewById(R.id.btnLoginWithGoogle);
         btnRegistration = findViewById(R.id.btnRegistration);
         btnBack = findViewById(R.id.btnBack);
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        loginDialog = new Dialog(this);
+        loginDialog.setContentView(R.layout.login_dialog);
+        if (loginDialog.getWindow() != null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
+            loginDialog.getWindow().setBackgroundDrawable(drawable);
+        }
+        btnOk = loginDialog.findViewById(R.id.btnOk);
+        tvSignInfo = loginDialog.findViewById(R.id.tvSignInfo);
+        authViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(AuthViewModel.class);
+        authViewModel.setContext(getApplicationContext());
+
         authViewModel.getUserLiveData().observe(this, userModel -> {
             if (userModel != null) {
-                // Tutaj możesz przekierować użytkownika do innej aktywności lub wykonać inne operacje po zalogowaniu
+                tvSignInfo.setText("SIGNED UP!");
+                loginDialog.show();
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finish();
+                    }
+                });
             } else {
-                Toast.makeText(this, "Błąd logowania", Toast.LENGTH_SHORT).show();
+                tvSignInfo.setText("LOGIN ERROR");
+                loginDialog.show();
+                btnOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loginDialog.dismiss();
+                    }
+                });
             }
         });
 
@@ -75,10 +104,10 @@ public class LoginActivity extends AppCompatActivity {
         if (signInIntent != null) {
             startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
         } else {
-            // Obsłuż ten przypadek, na przykład przez logowanie błędu
             Toast.makeText(this, "Błąd logowania przez Google", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void onClickRegistration(){
         Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
         startActivity(intent);

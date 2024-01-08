@@ -28,6 +28,8 @@
     <string name="password_is_empty">Pole powtórz hasło nie może być puste</string>
     <string name="password_is_same">Hasła nie są takie same</string>
     <string name="email_is_empty">Pole e-mail nie może być puste</string>
+    <string name="login_succesfull">SIGNED UP</string>
+    <string name="ok">OK</string>
 
 
 </resources>
