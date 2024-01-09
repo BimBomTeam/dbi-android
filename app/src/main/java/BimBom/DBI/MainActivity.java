@@ -30,6 +30,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.List;
@@ -110,10 +112,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         menu_item_login = findViewById(R.id.menu_item_login);
         menu_item_settings = findViewById(R.id.menu_item_settings);
         menu_item_help = findViewById(R.id.menu_item_help);
-
         setButtonClickListeners();
-
-
         setNavigationViewListener();
     }
     private void setButtonClickListeners() {
@@ -144,8 +143,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
                 } else if (id == R.id.menu_item_login) {
-                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(loginIntent);
+                    if (!isUserLoggedIn()) {
+                        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(loginIntent);
+                    }
+                    else {
+                        Toast.makeText(MainActivity.this, "Jesteś zalogowany", Toast.LENGTH_SHORT).show();
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    }
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
                 } else {
@@ -154,6 +159,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         });
     }
+
+    private boolean isUserLoggedIn() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser != null;
+    }
+
 
     private void onClickButtonUpload(View view) {
         if (photo != null) {

@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         authViewModel.getUserLiveData().observe(this, userModel -> {
             if (userModel != null) {
-                tvSignInfo.setText("SIGNED UP!");
+                tvSignInfo.setText("LOGGED");
                 loginDialog.show();
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override

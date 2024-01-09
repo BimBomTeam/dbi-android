@@ -1,10 +1,13 @@
 package BimBom.DBI;
 
+import android.app.Dialog;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,7 +22,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private EditText emailET, passwordET, passwordRepeatET;
-    private Button btnSign, btnBack;
+    private TextView tvSignInfo;
+    private Button btnSign, btnBack, btnOk;
+    private Dialog loginDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,14 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordRepeatET = findViewById(R.id.etPasswordRepeat);
         btnSign = findViewById(R.id.btnSingUp);
         btnBack = findViewById(R.id.btnBack);
-
+        loginDialog = new Dialog(this);
+        loginDialog.setContentView(R.layout.login_dialog);
+        if (loginDialog.getWindow() != null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
+            loginDialog.getWindow().setBackgroundDrawable(drawable);
+        }
+        btnOk = loginDialog.findViewById(R.id.btnOk);
+        tvSignInfo = loginDialog.findViewById(R.id.tvSignInfo);
         setupFieldListeners();
         setupButtonClickListeners();
     }
@@ -121,8 +133,8 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             passwordRepeatET.setError(null);
         }
-
         return fieldsValid;
+
     }
 
     private void checkEmailField() {
@@ -160,15 +172,26 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            showToast(getString(R.string.registration_successful));
+                            tvSignInfo.setText("SIGNED UP!");
+                            loginDialog.show();
+                            btnOk.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    finish();
+                                }
+                            });
                         } else {
-                            showToast(getString(R.string.registration_failed));
+                            tvSignInfo.setText("SIGN UP ERROR");
+                            loginDialog.show();
+                            btnOk.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loginDialog.dismiss();
+                                }
+                            });
                         }
                     }
                 });
     }
 
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
 }
