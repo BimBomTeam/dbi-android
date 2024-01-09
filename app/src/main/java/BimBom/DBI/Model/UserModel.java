@@ -1,5 +1,8 @@
 package BimBom.DBI.Model;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 public class UserModel {
     private String email;
     private String uid;
@@ -9,19 +12,12 @@ public class UserModel {
         this.uid = uid;
     }
 
-    public String getEmail() {
-        return email;
-    }
+    public String generateJwtToken() {
+        String secretKey = "nC4HGoTRMvgUAU52eHmhEMaQdpmpEwCj0wp6NdGbfqk";
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+        return Jwts.builder()
+                .setSubject(this.uid)
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
     }
 }

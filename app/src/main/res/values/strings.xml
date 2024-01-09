@@ -13,6 +13,7 @@
     <string name="settings">SETTINGS</string>
     <string name="default_web_client_id">377101215236-fgh1sgrfe3sms78vmi5cidodn2jamfie.apps.googleusercontent.com</string>
     <string name="help">HELP</string>
+    <string name="welcome">WELCOME</string>
     <string name="help_message">If you have a problem with the application</string>
     <string name="email_address">koval22887@stud.akademiabialska.pl</string>
     <string name="edit_account">EDIT ACCOUNT</string>
@@ -29,6 +30,7 @@
     <string name="password_is_same">Hasła nie są takie same</string>
     <string name="email_is_empty">Pole e-mail nie może być puste</string>
     <string name="login_succesfull">SIGNED UP</string>
+    <string name="password_should_be_six_characters">Password should be six characters</string>
     <string name="ok">OK</string>
 
 

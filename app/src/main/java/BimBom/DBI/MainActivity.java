@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private MenuItem menu_item_login;
     private MenuItem menu_item_settings;
     private MenuItem menu_item_help;
+    private MenuItem menu_item_user;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -74,7 +75,34 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
 
         initializeViews();
+        setupViewModelObservers();
+    }
 
+    private void initializeViews() {
+        progressDialog = new Dialog(this);
+        progressDialog.setContentView(R.layout.progress_dialog);
+
+        if (progressDialog.getWindow() != null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
+            progressDialog.getWindow().setBackgroundDrawable(drawable);
+        }
+
+        imageView = findViewById(R.id.imageView);
+        btnCamera = findViewById(R.id.btnCamera);
+        btnGallery = findViewById(R.id.btnGallery);
+        btnUpload = findViewById(R.id.btnUpload);
+        btnMenu = findViewById(R.id.btnMenu);
+        btnHistory = findViewById(R.id.btnHistory);
+        nvMenu = findViewById(R.id.nvMenu);
+        menu_item_login = findViewById(R.id.menu_item_login);
+        menu_item_settings = findViewById(R.id.menu_item_settings);
+        menu_item_help = findViewById(R.id.menu_item_help);
+        menu_item_user = nvMenu.getMenu().findItem(R.id.menu_item_user);
+        setButtonClickListeners();
+        setNavigationViewListener();
+    }
+
+    private void setupViewModelObservers() {
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
         photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
             if (identifyResponseDto != null) {
@@ -92,46 +120,36 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         });
     }
-    private void initializeViews() {
-        progressDialog = new Dialog(this);
-        progressDialog.setContentView(R.layout.progress_dialog);
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateMenuUserEmail();
+    }
 
-        if (progressDialog.getWindow() != null) {
-            Drawable  drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
-            progressDialog.getWindow().setBackgroundDrawable(drawable);
+    private void updateMenuUserEmail() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();
+            if (userEmail != null) {
+                String[] splitEmail = userEmail.split("@");
+                if (splitEmail.length > 0) {
+                    String emailPrefix = splitEmail[0];
+                    menu_item_user.setTitle(emailPrefix);
+                    return;
+                }
+            }
         }
+        menu_item_user.setTitle("Welcome");
+    }
 
-        imageView = findViewById(R.id.imageView);
-        btnCamera = findViewById(R.id.btnCamera);
-        btnGallery = findViewById(R.id.btnGallery);
-        btnUpload = findViewById(R.id.btnUpload);
-        btnMenu = findViewById(R.id.btnMenu);
-        btnHistory = findViewById(R.id.btnHistory);
-        nvMenu = findViewById(R.id.nvMenu);
-        menu_item_login = findViewById(R.id.menu_item_login);
-        menu_item_settings = findViewById(R.id.menu_item_settings);
-        menu_item_help = findViewById(R.id.menu_item_help);
-        setButtonClickListeners();
-        setNavigationViewListener();
-    }
-    private void setButtonClickListeners() {
-        setClickListener(btnUpload, this::onClickButtonUpload);
-        setClickListener(btnHistory, this::onClickButtonHistory);
-        setClickListener(btnMenu, this::onClickButtonMenu);
-        setClickListener(btnGallery, this::onClickButtonGallery);
-        setClickListener(btnCamera, this::onClickButtonCamera);
-    }
-    private void setClickListener(View view, View.OnClickListener listener) {
-        view.setOnClickListener(listener);
-    }
     private void setNavigationViewListener() {
         nvMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
-
                 if (id == R.id.menu_item_help) {
                     Intent helpIntent = new Intent(MainActivity.this, HelpActivity.class);
                     startActivity(helpIntent);
@@ -146,8 +164,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     if (!isUserLoggedIn()) {
                         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(loginIntent);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(MainActivity.this, "Jesteś zalogowany", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                     }
@@ -160,12 +177,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         });
     }
 
-    private boolean isUserLoggedIn() {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        return currentUser != null;
+    private void setButtonClickListeners() {
+        setClickListener(btnUpload, this::onClickButtonUpload);
+        setClickListener(btnHistory, this::onClickButtonHistory);
+        setClickListener(btnMenu, this::onClickButtonMenu);
+        setClickListener(btnGallery, this::onClickButtonGallery);
+        setClickListener(btnCamera, this::onClickButtonCamera);
     }
 
+    private void setClickListener(View view, View.OnClickListener listener) {
+        view.setOnClickListener(listener);
+    }
 
     private void onClickButtonUpload(View view) {
         if (photo != null) {
@@ -184,6 +206,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void onClickButtonHistory(View view) {
+        if (!isUserLoggedIn()) {
+            Toast.makeText(MainActivity.this, "Musisz się zalogować, aby wyświetlić historię", Toast.LENGTH_SHORT).show();
+        } else {
+            showHistory();
+        }
+    }
+
+    private void showHistory() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
         View bottomSheetView = getLayoutInflater().inflate(R.layout.dogs_history, null);
         bottomSheetDialog.setContentView(bottomSheetView);
@@ -206,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private void onClickButtonCamera(View view) {
         checkCameraPermission();
     }
-
 
     private void checkCameraPermission() {
         String[] perms = {Manifest.permission.CAMERA};
@@ -322,5 +351,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 startActivity(intent);
             }
         }
+    }
+
+    private boolean isUserLoggedIn() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser != null;
     }
 }

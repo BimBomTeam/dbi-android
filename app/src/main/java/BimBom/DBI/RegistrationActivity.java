@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,9 +21,9 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private EditText emailET, passwordET, passwordRepeatET;
-    private TextView tvSignInfo;
+    private TextView tvInfo;
     private Button btnSign, btnBack, btnOk;
-    private Dialog loginDialog;
+    private Dialog registrationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +36,14 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordRepeatET = findViewById(R.id.etPasswordRepeat);
         btnSign = findViewById(R.id.btnSingUp);
         btnBack = findViewById(R.id.btnBack);
-        loginDialog = new Dialog(this);
-        loginDialog.setContentView(R.layout.login_dialog);
-        if (loginDialog.getWindow() != null) {
+        registrationDialog = new Dialog(this);
+        registrationDialog.setContentView(R.layout.info_dialog);
+        if (registrationDialog.getWindow() != null) {
             Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
-            loginDialog.getWindow().setBackgroundDrawable(drawable);
+            registrationDialog.getWindow().setBackgroundDrawable(drawable);
         }
-        btnOk = loginDialog.findViewById(R.id.btnOk);
-        tvSignInfo = loginDialog.findViewById(R.id.tvSignInfo);
+        btnOk = registrationDialog.findViewById(R.id.btnOk);
+        tvInfo = registrationDialog.findViewById(R.id.tvInfo);
         setupFieldListeners();
         setupButtonClickListeners();
     }
@@ -152,15 +151,22 @@ public class RegistrationActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(password)) {
             passwordET.setError(getString(R.string.password_is_empty));
+        } else if (!isSixCharacters(password)) {
+            passwordET.setError(getString(R.string.password_should_be_six_characters));
         } else {
             passwordET.setError(null);
         }
-
         if (TextUtils.isEmpty(confirmPassword)) {
             passwordRepeatET.setError(getString(R.string.password_is_same));
+        } else if (!isSixCharacters(confirmPassword)) {
+            passwordRepeatET.setError(getString(R.string.password_should_be_six_characters));
         } else {
             passwordRepeatET.setError(null);
         }
+    }
+
+    private boolean isSixCharacters(String text) {
+        return text.matches("^.{6}$");
     }
 
     private void register() {
@@ -172,8 +178,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            tvSignInfo.setText("SIGNED UP!");
-                            loginDialog.show();
+                            tvInfo.setText("SIGNED UP!");
+                            registrationDialog.show();
                             btnOk.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -181,12 +187,12 @@ public class RegistrationActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            tvSignInfo.setText("SIGN UP ERROR");
-                            loginDialog.show();
+                            tvInfo.setText("SIGN UP ERROR");
+                            registrationDialog.show();
                             btnOk.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    loginDialog.dismiss();
+                                    registrationDialog.dismiss();
                                 }
                             });
                         }

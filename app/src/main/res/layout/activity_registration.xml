@@ -113,7 +113,7 @@
         android:id="@+id/btnSingUp"
         android:layout_width="193dp"
         android:layout_height="59dp"
-        android:layout_marginBottom="150dp"
+        android:layout_marginBottom="140dp"
         android:background="@drawable/rounded_button_background"
         android:enabled="true"
         android:text="SIGN UP"
@@ -121,7 +121,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.961"
+        app:layout_constraintVertical_bias="1.0"
         tools:ignore="MissingConstraints" />
 
     <EditText
@@ -159,5 +159,13 @@
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
         app:layout_constraintVertical_bias="0.957"
         tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="180dp"
+        tools:layout_editor_absoluteY="498dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

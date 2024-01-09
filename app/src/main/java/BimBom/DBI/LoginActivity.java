@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,13 +35,13 @@ public class LoginActivity extends AppCompatActivity {
         btnRegistration = findViewById(R.id.btnRegistration);
         btnBack = findViewById(R.id.btnBack);
         loginDialog = new Dialog(this);
-        loginDialog.setContentView(R.layout.login_dialog);
+        loginDialog.setContentView(R.layout.info_dialog);
         if (loginDialog.getWindow() != null) {
             Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
             loginDialog.getWindow().setBackgroundDrawable(drawable);
         }
         btnOk = loginDialog.findViewById(R.id.btnOk);
-        tvSignInfo = loginDialog.findViewById(R.id.tvSignInfo);
+        tvSignInfo = loginDialog.findViewById(R.id.tvInfo);
         authViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(AuthViewModel.class);
         authViewModel.setContext(getApplicationContext());
 
@@ -94,10 +95,37 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View view) {
-        String email = etLogin.getText().toString();
-        String password = etPassword.getText().toString();
+        String email = etLogin.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            showError("Wpisz adres e-mail i hasło");
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showError("Podaj poprawny adres e-mail");
+            return;
+        }
+
         authViewModel.loginUser(email, password);
     }
+
+    private void showError(String errorMessage) {
+        tvSignInfo.setText(errorMessage);
+        loginDialog.show();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginDialog.dismiss();
+            }
+        });
+    }
+
+    private boolean isValidEmail(String email) {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 
     private void onLoginWithGoogleClick() {
         Intent signInIntent = authViewModel.getGoogleSignInIntent();
@@ -108,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void onClickRegistration(){
+    private void onClickRegistration() {
         Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
         startActivity(intent);
     }
