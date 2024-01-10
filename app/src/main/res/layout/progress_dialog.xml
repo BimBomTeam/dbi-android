@@ -29,7 +29,7 @@
         android:layout_marginStart="44dp"
         android:layout_marginTop="70dp"
         android:layout_marginEnd="44dp"
-        android:text="Uploading...Please wait"
+        android:text="@string/uploading"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 }
             }
         }
-        menu_item_user.setTitle("Welcome");
+        menu_item_user.setTitle(getString(R.string.welcome));
     }
 
     private void setNavigationViewListener() {
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(loginIntent);
                     } else {
-                        Toast.makeText(MainActivity.this, "Jesteś zalogowany", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, R.string.you_are_logged, Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
                     }
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -201,13 +201,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             photoViewModel.setTrustManager(trustManager);
             photoViewModel.setPhoto(photoModel);
         } else {
-            Toast.makeText(MainActivity.this, "Proszę wybrać zdjęcie", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.photo_selected, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void onClickButtonHistory(View view) {
         if (!isUserLoggedIn()) {
-            Toast.makeText(MainActivity.this, "Musisz się zalogować, aby wyświetlić historię", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.you_must_log_to_history, Toast.LENGTH_SHORT).show();
         } else {
             showHistory();
         }
@@ -245,8 +245,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             EasyPermissions.requestPermissions(
                     new PermissionRequest.Builder(this, CAMERA_PERMISSION_REQUEST_CODE, perms)
                             .setRationale(R.string.cameraPermission)
-                            .setPositiveButtonText("OK")
-                            .setNegativeButtonText("Anuluj")
+                            .setPositiveButtonText(R.string.ok)
+                            .setNegativeButtonText(R.string.cancle)
                             .build()
             );
         }

@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         authViewModel.getUserLiveData().observe(this, userModel -> {
             if (userModel != null) {
-                tvSignInfo.setText("LOGGED");
+                tvSignInfo.setText(getString(R.string.Logged));
                 loginDialog.show();
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                tvSignInfo.setText("LOGIN ERROR");
+                tvSignInfo.setText(R.string.login_error);
                 loginDialog.show();
                 btnOk.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -99,12 +99,12 @@ public class LoginActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            showError("Wpisz adres e-mail i hasło");
+            showError(getString(R.string.email_and_password_error));
             return;
         }
 
         if (!isValidEmail(email)) {
-            showError("Podaj poprawny adres e-mail");
+            showError(getString(R.string.email_error));
             return;
         }
 
@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
         if (signInIntent != null) {
             startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
         } else {
-            Toast.makeText(this, "Błąd logowania przez Google", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_loin_google , Toast.LENGTH_SHORT).show();
         }
     }
 

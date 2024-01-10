@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- main_menu strings -->
-
     <string name="app_name">Dog Breed</string>
     <string name="dog_breed_string">Dog Breed</string>
     <string name="upload_string">UPLOAD</string>
@@ -9,29 +8,51 @@
     <string name="action_settings">Settings</string>
     <string name="menu_gallery">Gallery</string>
     <string name="login">LOGIN</string>
+    <string name="LOG_IN_WITH">LOG IN WITH</string>
     <string name="Registration">Registration</string>
     <string name="settings">SETTINGS</string>
     <string name="default_web_client_id">377101215236-fgh1sgrfe3sms78vmi5cidodn2jamfie.apps.googleusercontent.com</string>
     <string name="help">HELP</string>
     <string name="welcome">WELCOME</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="password_repeat">Repeat Password</string>
+    <string name="email">E-mail</string>
+    <string name="more">More</string>
+    <string name="description">Description</string>
     <string name="help_message">If you have a problem with the application</string>
     <string name="email_address">koval22887@stud.akademiabialska.pl</string>
     <string name="edit_account">EDIT ACCOUNT</string>
-    <string name="clear_history">CLEAR HISTORY</string>\
+    <string name="clear_history">CLEAR HISTORY</string>
     <string name="delete_account">DELETE ACCOUNT</string>
     <string name="logout">LOG OUT</string>
-    <string name="cameraPermission"> Aplikacja potrzebuje dostępu do aparatu </string>
-    <string name="noHavePermissionCamera">Nie można otworzyć aparatu bez uprawnień</string>
-    <string name="noHavePermissionGallery">Nie można otworzyć galerii bez uprawnień</string>
-    <string name="PermissionExternalmemory">Brak uprawnień do odczytu z pamięci zewnętrznej</string>
-    <string name="registration_successful">Rejestracja udana</string>
-    <string name="registration_failed">Rejestracja nieudana</string>
-    <string name="password_is_empty">Pole powtórz hasło nie może być puste</string>
-    <string name="password_is_same">Hasła nie są takie same</string>
-    <string name="email_is_empty">Pole e-mail nie może być puste</string>
-    <string name="login_succesfull">SIGNED UP</string>
+    <string name="SIGN_UP">SIGN UP</string>
+    <string name="cameraPermission">The application needs access to the camera</string>
+    <string name="noHavePermissionCamera">Cannot open the camera without permissions</string>
+    <string name="noHavePermissionGallery">Cannot open the gallery without permissions</string>
+    <string name="PermissionExternalmemory">No permission to read from external memory</string>
+    <string name="registration_successful">Registration successful</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="password_same_is_empty">Repeat password field cannot be empty</string>
+    <string name="password_is_empty">Repeat password field cannot be empty</string>
+    <string name="password_is_same">Passwords do not match</string>
+    <string name="email_is_empty">E-mail field cannot be empty</string>
+    <string name="login_succesfull">Signed up</string>
+    <string name="login_succesfull_error">Sign up error</string>
     <string name="password_should_be_six_characters">Password should be six characters</string>
     <string name="ok">OK</string>
-
-
+    <string name="email_and_password_error">"Enter email and password"</string>
+    <string name="email_error">Enter a valid email address</string>
+    <string name="error_loin_google">Google login error</string>
+    <string name="Logged">LOGGED</string>
+    <string name="login_error">LOGIN ERROR</string>
+    <string name="account_deleted">Account deleted successfully</string>
+    <string name="account_deleted_erroe">Failed to delete the account</string>
+    <string name="logged_out">Logged out</string>
+    <string name="you_are_logged">You are logged in</string>
+    <string name="photo_selected">Please select a photo</string>
+    <string name="you_must_log_to_history">You must log in to view history</string>
+    <string name="cancle">Cancel</string>
+    <string name="not_found">X509TrustManager not found</string>
+    <string name="uploading">Uploading... Please wait</string>
 </resources>

@@ -39,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Toast.makeText(SettingsActivity.this, "Wylogowano",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, R.string.logged_out,Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -53,10 +53,10 @@ public class SettingsActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(SettingsActivity.this, "Konto usunięte pomyślnie", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SettingsActivity.this, R.string.account_deleted, Toast.LENGTH_SHORT).show();
                                         finish();
                                     } else {
-                                        Toast.makeText(SettingsActivity.this, "Nie udało się usunąć konta", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SettingsActivity.this, R.string.account_deleted_erroe, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });

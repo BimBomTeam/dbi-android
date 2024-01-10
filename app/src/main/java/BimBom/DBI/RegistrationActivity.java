@@ -118,7 +118,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
         if (TextUtils.isEmpty(confirmPassword)) {
-            passwordRepeatET.setError(getString(R.string.password_is_empty));
+            passwordRepeatET.setError(getString(R.string.password_same_is_empty));
             fieldsValid = false;
         } else {
             passwordRepeatET.setError(null);
@@ -178,7 +178,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            tvInfo.setText("SIGNED UP!");
+                            tvInfo.setText(getString(R.string.login_succesfull));
                             registrationDialog.show();
                             btnOk.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -187,7 +187,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            tvInfo.setText("SIGN UP ERROR");
+                            tvInfo.setText(getString(R.string.login_succesfull_error));
                             registrationDialog.show();
                             btnOk.setOnClickListener(new View.OnClickListener() {
                                 @Override
