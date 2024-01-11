@@ -12,16 +12,40 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import BimBom.DBI.R;
 
 public class SettingsActivity extends AppCompatActivity {
-    private Button btnBack, btnlogout, btnDeleteAccont;
+    private Button btnBack, btnlogout, btnDeleteAccont, btnEditAccount, btnClearHistory;
 
     private void initializeViews() {
         btnBack = findViewById(R.id.btnBack);
         btnlogout = findViewById(R.id.btnLogout);
         btnDeleteAccont = findViewById(R.id.btnDeleteAccont);
+        btnEditAccount = findViewById(R.id.btnEditAccount);
+        btnClearHistory = findViewById(R.id.btnClearHistory);
+    }
+
+    private boolean isUserLoggedIn() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser != null;
+    }
+
+    private void buttonsEnabled() {
+        if (!isUserLoggedIn()) {
+            btnlogout.setEnabled(false);
+            btnDeleteAccont.setEnabled(false);
+            btnEditAccount.setEnabled(false);
+            btnClearHistory.setEnabled(false);
+
+        } else {
+            btnlogout.setEnabled(true);
+            btnDeleteAccont.setEnabled(true);
+            btnEditAccount.setEnabled(true);
+            btnClearHistory.setEnabled(true);
+        }
     }
 
     @Override
@@ -29,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         initializeViews();
+        buttonsEnabled();
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Toast.makeText(SettingsActivity.this, R.string.logged_out,Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, R.string.logged_out, Toast.LENGTH_SHORT).show();
                 finish();
             }
         });

@@ -74,7 +74,7 @@
         android:layout_marginBottom="331dp"
         android:background="@drawable/rounded_edit_text"
         android:ems="10"
-        android:hint="@string/login"
+        android:hint="@string/email"
         android:inputType="text"
         android:paddingLeft="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
