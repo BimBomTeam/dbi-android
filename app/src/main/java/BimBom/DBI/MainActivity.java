@@ -76,7 +76,28 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
 
         initializeViews();
+
+
+        PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
+        photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
+            if (identifyResponseDto != null) {
+                progressDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, DogBreedActivity.class);
+                intent.putExtra("photoBitmap", photo);
+                intent.putExtra("dogName", identifyResponseDto.name);
+                intent.putExtra("dogDescription", identifyResponseDto.description);
+                startActivity(intent);
+            }
+        });
+        photoViewModel.getErrorLiveData().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
+
         setupViewModelObservers();
+
     }
 
     private void initializeViews() {
