@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private MenuItem menu_item_help;
     private MenuItem menu_item_user;
 
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             if (identifyResponseDto != null) {
                 progressDialog.dismiss();
                 Intent intent = new Intent(MainActivity.this, DogBreedActivity.class);
-                intent.putExtra("photoBitmap", photo);
                 intent.putExtra("dogName", identifyResponseDto.name);
                 startActivity(intent);
             }
