@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="320dp"
         android:fontFamily="@font/julius_sans_one"
-        android:text="name"
+        android:text="@string/name"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"

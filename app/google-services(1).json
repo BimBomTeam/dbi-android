@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "377101215236",
+    "project_id": "dogbreed-488c5",
+    "storage_bucket": "dogbreed-488c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377101215236:android:6ba42f28bb396358313751",
+        "android_client_info": {
+          "package_name": "BimBom.DBI"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "377101215236-72e7ebbb9qsesllutec4r0lrvevgnog8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "BimBom.DBI",
+            "certificate_hash": "2fefe543c21d66c564b43da68a3da913eb2a71f7"
+          }
+        },
+        {
+          "client_id": "377101215236-fgh1sgrfe3sms78vmi5cidodn2jamfie.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdaQkFI6w4RliuUWJ0CyXWcF8uZ1JJ8uE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "377101215236-fgh1sgrfe3sms78vmi5cidodn2jamfie.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

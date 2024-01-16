@@ -30,6 +30,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.List;
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private MenuItem menu_item_login;
     private MenuItem menu_item_settings;
     private MenuItem menu_item_help;
+    private MenuItem menu_item_user;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -72,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
 
         initializeViews();
+
 
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
         photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
@@ -90,14 +95,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
+        setupViewModelObservers();
+
     }
+
     private void initializeViews() {
         progressDialog = new Dialog(this);
         progressDialog.setContentView(R.layout.progress_dialog);
 
-
         if (progressDialog.getWindow() != null) {
-            Drawable  drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
+            Drawable drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
             progressDialog.getWindow().setBackgroundDrawable(drawable);
         }
 
@@ -111,29 +119,58 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         menu_item_login = findViewById(R.id.menu_item_login);
         menu_item_settings = findViewById(R.id.menu_item_settings);
         menu_item_help = findViewById(R.id.menu_item_help);
-
+        menu_item_user = nvMenu.getMenu().findItem(R.id.menu_item_user);
         setButtonClickListeners();
-
-
         setNavigationViewListener();
     }
-    private void setButtonClickListeners() {
-        setClickListener(btnUpload, this::onClickButtonUpload);
-        setClickListener(btnHistory, this::onClickButtonHistory);
-        setClickListener(btnMenu, this::onClickButtonMenu);
-        setClickListener(btnGallery, this::onClickButtonGallery);
-        setClickListener(btnCamera, this::onClickButtonCamera);
+
+    private void setupViewModelObservers() {
+        PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
+        photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
+            if (identifyResponseDto != null) {
+                progressDialog.dismiss();
+                Intent intent = new Intent(MainActivity.this, DogBreedActivity.class);
+                intent.putExtra("dogName", identifyResponseDto.name);
+                startActivity(intent);
+            }
+        });
+        photoViewModel.getErrorLiveData().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-    private void setClickListener(View view, View.OnClickListener listener) {
-        view.setOnClickListener(listener);
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateMenuUserEmail();
     }
+
+    private void updateMenuUserEmail() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            String userEmail = currentUser.getEmail();
+            if (userEmail != null) {
+                String[] splitEmail = userEmail.split("@");
+                if (splitEmail.length > 0) {
+                    String emailPrefix = splitEmail[0];
+                    menu_item_user.setTitle(emailPrefix);
+                    return;
+                }
+            }
+        }
+        menu_item_user.setTitle(getString(R.string.welcome));
+    }
+
     private void setNavigationViewListener() {
         nvMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
-
                 if (id == R.id.menu_item_help) {
                     Intent helpIntent = new Intent(MainActivity.this, HelpActivity.class);
                     startActivity(helpIntent);
@@ -145,8 +182,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
                 } else if (id == R.id.menu_item_login) {
-                    Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivity(loginIntent);
+                    if (!isUserLoggedIn()) {
+                        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(loginIntent);
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.you_are_logged, Toast.LENGTH_SHORT).show();
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    }
                     drawerLayout.closeDrawer(GravityCompat.START);
                     return true;
                 } else {
@@ -154,6 +196,18 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 }
             }
         });
+    }
+
+    private void setButtonClickListeners() {
+        setClickListener(btnUpload, this::onClickButtonUpload);
+        setClickListener(btnHistory, this::onClickButtonHistory);
+        setClickListener(btnMenu, this::onClickButtonMenu);
+        setClickListener(btnGallery, this::onClickButtonGallery);
+        setClickListener(btnCamera, this::onClickButtonCamera);
+    }
+
+    private void setClickListener(View view, View.OnClickListener listener) {
+        view.setOnClickListener(listener);
     }
 
     private void onClickButtonUpload(View view) {
@@ -168,11 +222,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             photoViewModel.setTrustManager(trustManager);
             photoViewModel.setPhoto(photoModel);
         } else {
-            Toast.makeText(MainActivity.this, "Proszę wybrać zdjęcie", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.photo_selected, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void onClickButtonHistory(View view) {
+        if (!isUserLoggedIn()) {
+            Toast.makeText(MainActivity.this, R.string.you_must_log_to_history, Toast.LENGTH_SHORT).show();
+        } else {
+            showHistory();
+        }
+    }
+
+    private void showHistory() {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
         View bottomSheetView = getLayoutInflater().inflate(R.layout.dogs_history, null);
         bottomSheetDialog.setContentView(bottomSheetView);
@@ -196,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         checkCameraPermission();
     }
 
-
     private void checkCameraPermission() {
         String[] perms = {Manifest.permission.CAMERA};
         if (EasyPermissions.hasPermissions(this, perms)) {
@@ -205,8 +266,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             EasyPermissions.requestPermissions(
                     new PermissionRequest.Builder(this, CAMERA_PERMISSION_REQUEST_CODE, perms)
                             .setRationale(R.string.cameraPermission)
-                            .setPositiveButtonText("OK")
-                            .setNegativeButtonText("Anuluj")
+                            .setPositiveButtonText(R.string.ok)
+                            .setNegativeButtonText(R.string.cancle)
                             .build()
             );
         }
@@ -311,5 +372,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 startActivity(intent);
             }
         }
+    }
+
+    private boolean isUserLoggedIn() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        return currentUser != null;
     }
 }

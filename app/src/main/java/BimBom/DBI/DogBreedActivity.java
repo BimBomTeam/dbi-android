@@ -1,19 +1,14 @@
 package BimBom.DBI;
 
 import android.graphics.Bitmap;
-
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.hierynomus.msdtyp.AccessMask;
 import com.hierynomus.mssmb2.SMB2CreateDisposition;
 import com.hierynomus.mssmb2.SMB2ShareAccess;
@@ -22,22 +17,27 @@ import com.hierynomus.smbj.auth.AuthenticationContext;
 import com.hierynomus.smbj.connection.Connection;
 import com.hierynomus.smbj.session.Session;
 import com.hierynomus.smbj.share.DiskShare;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumSet;
-
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.Base64;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbException;
+import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileInputStream;
+import BimBom.DBI.ViewModel.PhotoViewModel;
 
 public class DogBreedActivity extends AppCompatActivity {
     private ImageView ivPhoto;
     private TextView tvName;
     private TextView tvDescription;
     private Button btnBack;
-
-
     private Bitmap bitmap;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +47,18 @@ public class DogBreedActivity extends AppCompatActivity {
         tvName = findViewById(R.id.tvName);
         tvDescription = findViewById(R.id.tvDescription);
         btnBack = findViewById(R.id.btnBack);
+        String user = "ubuntu";
+        String pass = "123";
+        String sharedFolder = "sambashare";
+        String server = "smb://130.162.37.11/";
+        String filePath = "image.png";
+
 
         String dogName = getIntent().getStringExtra("dogName");
         if (dogName != null) {
             tvName.setText(dogName);
+        }
+
         }
         String dogDescription = getIntent().getStringExtra("dogDescription");
         if (dogDescription != null){

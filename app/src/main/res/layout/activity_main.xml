@@ -118,7 +118,7 @@
             android:layout_marginBottom="204dp"
             android:background="@drawable/rounded_button_background"
             android:fontFamily="@font/julius_sans_one"
-            android:text="UPLOAD"
+            android:text="@string/upload_string"
             android:textColor="@color/dog_breed_color"
             android:textSize="35sp"
             app:layout_constraintBottom_toBottomOf="@+id/_bg__main_menu"
