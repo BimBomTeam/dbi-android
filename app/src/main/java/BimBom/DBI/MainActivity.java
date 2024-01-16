@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 Intent intent = new Intent(MainActivity.this, DogBreedActivity.class);
                 intent.putExtra("photoBitmap", photo);
                 intent.putExtra("dogName", identifyResponseDto.name);
+                intent.putExtra("dogDescription", identifyResponseDto.description);
                 startActivity(intent);
             }
         });
