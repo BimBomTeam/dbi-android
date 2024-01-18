@@ -1,24 +1,16 @@
 package BimBom.DBI.ViewModel;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import BimBom.DBI.ApiService.ApiService;
-import BimBom.DBI.DogBreedActivity;
-import BimBom.DBI.MainActivity;
+import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Model.Dto.IdentifyRequestDto;
 import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.Model.PhotoModel;
@@ -27,7 +19,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -1,4 +1,4 @@
-package BimBom.DBI.ApiService;
+package BimBom.DBI.Service;
 import BimBom.DBI.Model.Dto.IdentifyRequestDto;
 import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import retrofit2.Call;

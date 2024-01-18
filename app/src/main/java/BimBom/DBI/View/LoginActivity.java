@@ -1,4 +1,4 @@
-package BimBom.DBI;
+package BimBom.DBI.View;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import BimBom.DBI.R;
 import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {

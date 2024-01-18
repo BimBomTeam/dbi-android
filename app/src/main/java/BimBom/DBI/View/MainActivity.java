@@ -1,4 +1,4 @@
-package BimBom.DBI;
+package BimBom.DBI.View;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -7,11 +7,14 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,14 +35,30 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.hierynomus.msdtyp.AccessMask;
+import com.hierynomus.mssmb2.SMB2CreateDisposition;
+import com.hierynomus.mssmb2.SMB2ShareAccess;
+import com.hierynomus.smbj.SMBClient;
+import com.hierynomus.smbj.auth.AuthenticationContext;
+import com.hierynomus.smbj.connection.Connection;
+import com.hierynomus.smbj.session.Session;
+import com.hierynomus.smbj.share.DiskShare;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
 import BimBom.DBI.Model.PhotoModel;
+import BimBom.DBI.R;
+import BimBom.DBI.Service.ImageDownloadService;
 import BimBom.DBI.Utils.SslHelper;
 import BimBom.DBI.ViewModel.PhotoViewModel;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -67,37 +86,18 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private MenuItem menu_item_settings;
     private MenuItem menu_item_help;
     private MenuItem menu_item_user;
-
-
+    public Intent dogBreedIntent;
+    public boolean strartDownload = false;
+    private Bitmap bitmap;
+    private final Executor executor = Executors.newSingleThreadExecutor();
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initializeViews();
-
-
-        PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
-        photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
-            if (identifyResponseDto != null) {
-                progressDialog.dismiss();
-                Intent intent = new Intent(MainActivity.this, DogBreedActivity.class);
-                intent.putExtra("photoBitmap", photo);
-                intent.putExtra("dogName", identifyResponseDto.name);
-                intent.putExtra("dogDescription", identifyResponseDto.description);
-                startActivity(intent);
-            }
-        });
-        photoViewModel.getErrorLiveData().observe(this, errorMessage -> {
-            if (errorMessage != null) {
-                progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        dogBreedIntent = new Intent(MainActivity.this, DogBreedActivity.class);
         setupViewModelObservers();
-
     }
 
     private void initializeViews() {
@@ -128,10 +128,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
         photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
             if (identifyResponseDto != null) {
-                progressDialog.dismiss();
-                Intent intent = new Intent(MainActivity.this, DogBreedActivity.class);
-                intent.putExtra("dogName", identifyResponseDto.name);
-                startActivity(intent);
+
+                if (strartDownload) {  // Dodane sprawdzenie przed otwarciem progressDialog
+                    progressDialog.dismiss();
+                    dogBreedIntent.putExtra("dogName", identifyResponseDto.name);
+                    dogBreedIntent.putExtra("dogDescription", identifyResponseDto.description);
+                    startActivity(dogBreedIntent);
+                }
             }
         });
         photoViewModel.getErrorLiveData().observe(this, errorMessage -> {
@@ -183,8 +186,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     return true;
                 } else if (id == R.id.menu_item_login) {
                     if (!isUserLoggedIn()) {
-                        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(loginIntent);
+                        showLogin();
                     } else {
                         Toast.makeText(MainActivity.this, R.string.you_are_logged, Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
@@ -229,16 +231,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private void onClickButtonHistory(View view) {
         if (!isUserLoggedIn()) {
             Toast.makeText(MainActivity.this, R.string.you_must_log_to_history, Toast.LENGTH_SHORT).show();
+            showLogin();
         } else {
             showHistory();
         }
     }
 
     private void showHistory() {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this);
-        View bottomSheetView = getLayoutInflater().inflate(R.layout.dogs_history, null);
-        bottomSheetDialog.setContentView(bottomSheetView);
-        bottomSheetDialog.show();
+        Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+        startActivity(intent);
+    }
+    private void showLogin(){
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
     }
 
     private void onClickButtonMenu(View view) {
@@ -379,4 +384,5 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         FirebaseUser currentUser = mAuth.getCurrentUser();
         return currentUser != null;
     }
+
 }

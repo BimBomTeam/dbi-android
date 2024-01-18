@@ -1,4 +1,4 @@
-package BimBom.DBI;
+package BimBom.DBI.View;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,10 +26,9 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Base64;
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbException;
-import jcifs.smb.SmbFile;
-import jcifs.smb.SmbFileInputStream;
+
+import BimBom.DBI.R;
+import BimBom.DBI.Service.ImageDownloadService;
 import BimBom.DBI.ViewModel.PhotoViewModel;
 
 public class DogBreedActivity extends AppCompatActivity {
@@ -37,7 +36,6 @@ public class DogBreedActivity extends AppCompatActivity {
     private TextView tvName;
     private TextView tvDescription;
     private Button btnBack;
-    private Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,21 +45,18 @@ public class DogBreedActivity extends AppCompatActivity {
         tvName = findViewById(R.id.tvName);
         tvDescription = findViewById(R.id.tvDescription);
         btnBack = findViewById(R.id.btnBack);
-        String user = "ubuntu";
-        String pass = "123";
-        String sharedFolder = "sambashare";
-        String server = "smb://130.162.37.11/";
-        String filePath = "image.png";
 
-
+        Bitmap avatar = getIntent().getParcelableExtra("avatar");
+        if (avatar != null){
+            ivPhoto.setImageBitmap(avatar);
+        }
         String dogName = getIntent().getStringExtra("dogName");
         if (dogName != null) {
             tvName.setText(dogName);
         }
 
-        }
         String dogDescription = getIntent().getStringExtra("dogDescription");
-        if (dogDescription != null){
+        if (dogDescription != null) {
             tvDescription.setText(dogDescription);
         }
 
@@ -71,35 +66,7 @@ public class DogBreedActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        new SmbConnectionTask().execute();
-    }
-
-    private class SmbConnectionTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            SMBClient client = new SMBClient();
-            try (Connection connection = client.connect("130.162.37.11")) {
-                AuthenticationContext ac = new AuthenticationContext("ubuntu", "123".toCharArray(), "");
-                Session session = connection.authenticate(ac);
-
-
-                try (DiskShare share = (DiskShare) session.connectShare("sambashare")) {
-                    String filePath = "image.png";
-                    try (InputStream in = share.openFile(filePath, EnumSet.of(AccessMask.FILE_READ_DATA), null, SMB2ShareAccess.ALL, SMB2CreateDisposition.FILE_OPEN, null).getInputStream()) {
-                        bitmap = BitmapFactory.decodeStream(in);
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            ivPhoto.setImageBitmap(bitmap);
-        }
+        ImageDownloadService imageDownloadService = new ImageDownloadService();
+        imageDownloadService.downloadImage();
     }
 }

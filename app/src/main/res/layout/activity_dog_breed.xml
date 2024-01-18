@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DogBreedActivity">
+    tools:context=".View.DogBreedActivity">
 
     <View
         android:id="@+id/_bg__main_menu"
@@ -60,7 +60,7 @@
         android:layout_marginBottom="320dp"
         android:fontFamily="@font/julius_sans_one"
         android:text="@string/name"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
         app:layout_constraintEnd_toEndOf="parent"

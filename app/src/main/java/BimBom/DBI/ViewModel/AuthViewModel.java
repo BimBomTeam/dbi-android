@@ -3,10 +3,8 @@ package BimBom.DBI.ViewModel;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -19,9 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
-import java.io.Closeable;
-
-import BimBom.DBI.LoginActivity;
+import BimBom.DBI.View.LoginActivity;
 import BimBom.DBI.Model.UserModel;
 import BimBom.DBI.R;
 
