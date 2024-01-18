@@ -128,11 +128,14 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
         photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
             if (identifyResponseDto != null) {
-
+                ImageDownloadService imageDownloadService = new ImageDownloadService();
+                Bitmap bitmap = imageDownloadService.downloadImage();
+                strartDownload = true;
                 if (strartDownload) {  // Dodane sprawdzenie przed otwarciem progressDialog
                     progressDialog.dismiss();
                     dogBreedIntent.putExtra("dogName", identifyResponseDto.name);
                     dogBreedIntent.putExtra("dogDescription", identifyResponseDto.description);
+                    dogBreedIntent.putExtra("avatar", bitmap);
                     startActivity(dogBreedIntent);
                 }
             }

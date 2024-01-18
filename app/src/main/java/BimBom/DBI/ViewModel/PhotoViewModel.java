@@ -73,7 +73,8 @@ public class PhotoViewModel extends ViewModel {
         OkHttpClient client = clientBuilder.build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://130.162.37.11/")
+//                .baseUrl("https://10.0.2.2:7219/") //localhost
+                .baseUrl("https://130.162.37.11/") //server
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

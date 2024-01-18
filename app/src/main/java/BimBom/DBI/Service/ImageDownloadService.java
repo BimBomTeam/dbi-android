@@ -25,15 +25,15 @@ import java.util.concurrent.TimeUnit;
 
 public class ImageDownloadService {
 
-    public Bitmap downloadImage(){
+    public Bitmap downloadImage() {
         Bitmap bitmap = null;
         ExecutorService executor = Executors.newFixedThreadPool(5);
         List<Future<Bitmap>> resultList = new ArrayList<>();
 
         // Uruchomienie zadań i zapisanie wyników do listy Future
-            Callable<Bitmap> worker = new SmbConnectionTask();
-            Future<Bitmap> result = executor.submit(worker);
-            resultList.add(result);
+        Callable<Bitmap> worker = new SmbConnectionTask();
+        Future<Bitmap> result = executor.submit(worker);
+        resultList.add(result);
 
 
         // Oczekiwanie na zakończenie wszystkich zadań i pobieranie wyników
@@ -49,7 +49,7 @@ public class ImageDownloadService {
         // Zamknięcie ExecutorService
         executor.shutdown();
         try {
-            executor.awaitTermination(5, TimeUnit.MINUTES);
+            executor.awaitTermination(2, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             System.err.println("Zadania zostały przerwane: " + e.getMessage());
         }
@@ -57,6 +57,7 @@ public class ImageDownloadService {
         System.out.println("Zakończono wszystkie wątki.");
         return bitmap;
     }
+
     private class SmbConnectionTask implements Callable<Bitmap> {
         public Bitmap bitmap;
 
@@ -78,13 +79,13 @@ public class ImageDownloadService {
                 throw new RuntimeException(e);
             }
 
-          // runOnUiThread(new Runnable() {
-          //     @Override
-          //     public void run() {
-          //         strartDownload = true;
-          //         dogBreedIntent.putExtra("avatar", bitmap);
-          //     }
-          // });
+            // runOnUiThread(new Runnable() {
+            //     @Override
+            //     public void run() {
+            //         strartDownload = true;
+            //         dogBreedIntent.putExtra("avatar", bitmap);
+            //     }
+            // });
         }
     }
 }

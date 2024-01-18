@@ -66,7 +66,5 @@ public class DogBreedActivity extends AppCompatActivity {
                 finish();
             }
         });
-        ImageDownloadService imageDownloadService = new ImageDownloadService();
-        imageDownloadService.downloadImage();
     }
 }
