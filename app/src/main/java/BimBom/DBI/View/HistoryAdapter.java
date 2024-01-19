@@ -64,4 +64,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.DogViewH
             dogAvatarWebView = itemView.findViewById(R.id.wvAvatar);
         }
     }
+    public void removeDog(int position) {
+        if (position >= 0 && position < dogList.size()) {
+            dogList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
 }

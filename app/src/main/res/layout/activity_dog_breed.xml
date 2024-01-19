@@ -32,13 +32,16 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
     <View
-        android:id="@+id/rectangle_7"
+        android:id="@+id/rectangle"
         android:layout_width="match_parent"
         android:layout_height="384dp"
         android:background="@drawable/rectangle_7_shape"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/tvName"
@@ -49,11 +52,11 @@
         android:text="@string/name"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.974" />
+        app:layout_constraintVertical_bias="0.987" />
 
     <TextView
         android:id="@+id/tvDescription"
@@ -75,11 +78,11 @@
         android:id="@+id/wvAvatar"
         android:layout_width="299dp"
         android:layout_height="288dp"
-        android:layout_marginBottom="132dp"
-        app:layout_constraintBottom_toBottomOf="@+id/rectangle_7"
+        android:layout_marginBottom="363dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
-        app:layout_constraintVertical_bias="0.257" />
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

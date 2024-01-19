@@ -13,10 +13,33 @@
         android:background="@drawable/_bg__main_menu_shape"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
+
+    <View
+        android:id="@+id/rectangle"
+        android:layout_width="match_parent"
+        android:layout_height="590dp"
+        android:background="@drawable/rectangle_7_shape"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bgmain_menu"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="128dp"
+        android:layout_height="94dp"
+        android:layout_marginBottom="379dp"
+        app:layout_constraintBottom_toBottomOf="@+id/_bgmain_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bgmain_menu"
+        app:layout_constraintVertical_bias="0.179"
+        app:srcCompat="@drawable/logo1" />
 
     <Button
         android:id="@+id/btnBack"
@@ -34,27 +57,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="567dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="590dp"
+        app:layout_constraintBottom_toBottomOf="@+id/_bgmain_menu"
+        app:layout_constraintDimensionRatio=""
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bgmain_menu"
         app:layout_constraintVertical_bias="1.0"
         tools:ignore="SpeakableTextPresentCheck"
         tools:listitem="@layout/item_rv_dog" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="128dp"
-        android:layout_height="94dp"
-        android:layout_marginTop="42dp"
-        app:layout_constraintBottom_toBottomOf="@+id/_bgmain_menu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/_bgmain_menu"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/logo1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

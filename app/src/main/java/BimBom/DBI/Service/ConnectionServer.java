@@ -19,7 +19,6 @@ public class ConnectionServer {
     private ApiService apiService;
 
     private ConnectionServer() {
-        // Initialize Retrofit and ApiService here
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -30,7 +29,7 @@ public class ConnectionServer {
         OkHttpClient client = clientBuilder.build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://130.162.37.11/") // Replace with your server URL
+                .baseUrl("https://130.162.37.11/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
