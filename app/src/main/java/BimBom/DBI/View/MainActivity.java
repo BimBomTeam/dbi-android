@@ -7,14 +7,11 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,24 +28,11 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.hierynomus.msdtyp.AccessMask;
-import com.hierynomus.mssmb2.SMB2CreateDisposition;
-import com.hierynomus.mssmb2.SMB2ShareAccess;
-import com.hierynomus.smbj.SMBClient;
-import com.hierynomus.smbj.auth.AuthenticationContext;
-import com.hierynomus.smbj.connection.Connection;
-import com.hierynomus.smbj.session.Session;
-import com.hierynomus.smbj.share.DiskShare;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -58,7 +42,7 @@ import javax.net.ssl.X509TrustManager;
 
 import BimBom.DBI.Model.PhotoModel;
 import BimBom.DBI.R;
-import BimBom.DBI.Service.ImageDownloadService;
+
 import BimBom.DBI.Utils.SslHelper;
 import BimBom.DBI.ViewModel.PhotoViewModel;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -128,14 +112,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
         photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
             if (identifyResponseDto != null) {
-                ImageDownloadService imageDownloadService = new ImageDownloadService();
-                Bitmap bitmap = imageDownloadService.downloadImage();
                 strartDownload = true;
                 if (strartDownload) {  // Dodane sprawdzenie przed otwarciem progressDialog
                     progressDialog.dismiss();
                     dogBreedIntent.putExtra("dogName", identifyResponseDto.name);
                     dogBreedIntent.putExtra("dogDescription", identifyResponseDto.description);
-                    dogBreedIntent.putExtra("avatar", bitmap);
                     startActivity(dogBreedIntent);
                 }
             }

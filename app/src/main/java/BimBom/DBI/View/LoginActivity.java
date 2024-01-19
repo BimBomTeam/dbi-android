@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import BimBom.DBI.Model.UserModel;
 import BimBom.DBI.R;
 import BimBom.DBI.ViewModel.AuthViewModel;
 
@@ -96,20 +98,28 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View view) {
-        String email = etLogin.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+        try {
+            String email = etLogin.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            showError(getString(R.string.email_and_password_error));
-            return;
+            if (email.isEmpty() || password.isEmpty()) {
+                showError(getString(R.string.email_and_password_error));
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                showError(getString(R.string.email_error));
+                return;
+            }
+
+            authViewModel.loginUser(email, password);
+            UserModel userModel = authViewModel.getUserLiveData().getValue();
+            String tmp = userModel.generateJwtToken();
+            Log.d("waznewchuj",tmp);
+        }catch (Exception e)
+        {
+            Log.e("Logifajnedupa",e.getMessage());
         }
-
-        if (!isValidEmail(email)) {
-            showError(getString(R.string.email_error));
-            return;
-        }
-
-        authViewModel.loginUser(email, password);
     }
 
     private void showError(String errorMessage) {

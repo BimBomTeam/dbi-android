@@ -14,6 +14,7 @@ import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Model.Dto.IdentifyRequestDto;
 import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.Model.PhotoModel;
+import BimBom.DBI.Service.ConnectionServer;
 import BimBom.DBI.Utils.UnsafeOkHttpClient;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -63,23 +64,9 @@ public class PhotoViewModel extends ViewModel {
 
     private void sendImageToApi(PhotoModel photoModel) {
         progressBarVisibility.setValue(true);
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient.Builder clientBuilder = UnsafeOkHttpClient.getUnsafeOkHttpClient().newBuilder();
-        clientBuilder.readTimeout(200, TimeUnit.SECONDS);
-        clientBuilder.writeTimeout(200, TimeUnit.SECONDS);
-
-        OkHttpClient client = clientBuilder.build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("https://10.0.2.2:7219/") //localhost
-                .baseUrl("https://130.162.37.11/") //server
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
+        ConnectionServer connectionServer = ConnectionServer.getInstance();
+        ApiService apiService = connectionServer.getApiService();
 
         Call<IdentifyResponseDto> call = apiService.uploadPhoto(new IdentifyRequestDto(photoModel.getBase64Image()));
 

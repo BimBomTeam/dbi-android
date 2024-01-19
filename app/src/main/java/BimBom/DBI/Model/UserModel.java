@@ -12,8 +12,9 @@ public class UserModel {
         this.uid = uid;
     }
 
+
     public String generateJwtToken() {
-        String secretKey = "nC4HGoTRMvgUAU52eHmhEMaQdpmpEwCj0wp6NdGbfqk";
+        String secretKey = "eyJhbGciOiJIUzUxMiJ9meyJzdWIiOiJudkNvaDQ0bkxRaDM1OWR4WlpHdWViUDJjY0QyIn0mQlESTFmpgHVbUCUIQml5NaCMMJSFQWFuMmbf8iFvV1vdZsZrKuJ9bXgE6Ha63hD8LT6gLwDkA3te0xcg8GaFlQ";
 
         return Jwts.builder()
                 .setSubject(this.uid)
