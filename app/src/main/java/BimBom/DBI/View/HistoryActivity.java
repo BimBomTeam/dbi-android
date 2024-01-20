@@ -1,9 +1,7 @@
 package BimBom.DBI.View;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -30,25 +28,31 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        initializeViews();
+        setupRecyclerView();
+        setupItemTouchHelper();
+    }
+
+    private void initializeViews() {
         btnBack = findViewById(R.id.btnBack);
         recyclerView = findViewById(R.id.recyclerView);
+        setOnClickBtnBack();
+    }
 
-        List<Dog> dogList = generateSampleDogList();
-
-        historyAdapter = new HistoryAdapter(dogList, this);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(historyAdapter);
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
+    private void setOnClickBtnBack() {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+    }
+
+    private void setupRecyclerView() {
+        List<Dog> dogList = generateSampleDogList();
+        historyAdapter = new HistoryAdapter(dogList, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(historyAdapter);
     }
 
     private List<Dog> generateSampleDogList() {
@@ -60,6 +64,11 @@ public class HistoryActivity extends AppCompatActivity {
         sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png"));
         sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png"));
         return sampleDogList;
+    }
+
+    private void setupItemTouchHelper() {
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {

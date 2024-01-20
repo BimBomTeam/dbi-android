@@ -15,6 +15,9 @@ public class HelpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help);
         btnBack = findViewById(R.id.btnBack);
+        onClickBtnBack();
+    }
+    public void  onClickBtnBack(){
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -22,4 +25,5 @@ public class HelpActivity extends AppCompatActivity {
             }
         });
     }
+
 }

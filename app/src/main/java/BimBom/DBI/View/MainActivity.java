@@ -55,25 +55,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
     private static final int GALLERY_PERMISSION_REQUEST_CODE = 2;
     private static final int REQUEST_STORAGE_PERMISSION = 3;
-
+    private final Executor executor = Executors.newSingleThreadExecutor();
     private ImageView imageView;
-    private Button btnCamera;
-    private Button btnGallery;
-    private Button btnUpload;
-    private Button btnMenu;
-    private Button btnHistory;
-    private Bitmap photo;
-    private Bitmap unscaledPhoto;
+    private Button btnCamera , btnGallery,btnUpload ,btnMenu ,btnHistory;
+    private Bitmap photo, unscaledPhoto ,bitmap;
     private NavigationView nvMenu;
     private Dialog progressDialog;
-    private MenuItem menu_item_login;
-    private MenuItem menu_item_settings;
-    private MenuItem menu_item_help;
-    private MenuItem menu_item_user;
+    private MenuItem menu_item_login ,menu_item_settings ,menu_item_help,menu_item_user;
     public Intent dogBreedIntent;
     public boolean strartDownload = false;
-    private Bitmap bitmap;
-    private final Executor executor = Executors.newSingleThreadExecutor();
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +75,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void initializeViews() {
-        progressDialog = new Dialog(this);
-        progressDialog.setContentView(R.layout.progress_dialog);
-
-        if (progressDialog.getWindow() != null) {
-            Drawable drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
-            progressDialog.getWindow().setBackgroundDrawable(drawable);
-        }
+        initializeProgressDialog();
 
         imageView = findViewById(R.id.imageView);
         btnCamera = findViewById(R.id.btnCamera);
@@ -104,8 +88,30 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         menu_item_settings = findViewById(R.id.menu_item_settings);
         menu_item_help = findViewById(R.id.menu_item_help);
         menu_item_user = nvMenu.getMenu().findItem(R.id.menu_item_user);
+
         setButtonClickListeners();
+    }
+
+    private void initializeProgressDialog() {
+        progressDialog = new Dialog(this);
+        progressDialog.setContentView(R.layout.progress_dialog);
+
+        if (progressDialog.getWindow() != null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
+            progressDialog.getWindow().setBackgroundDrawable(drawable);
+        }
+    }
+
+    private void setButtonClickListeners() {
+        setClickListener(btnUpload, this::onClickButtonUpload);
+        setClickListener(btnHistory, this::onClickButtonHistory);
+        setClickListener(btnMenu, this::onClickButtonMenu);
+        setClickListener(btnGallery, this::onClickButtonGallery);
+        setClickListener(btnCamera, this::onClickButtonCamera);
         setNavigationViewListener();
+    }
+    private void setClickListener(View view, View.OnClickListener listener) {
+        view.setOnClickListener(listener);
     }
 
     private void setupViewModelObservers() {
@@ -113,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
             if (identifyResponseDto != null) {
                 strartDownload = true;
-                if (strartDownload) {  // Dodane sprawdzenie przed otwarciem progressDialog
+                if (strartDownload) {
                     progressDialog.dismiss();
                     dogBreedIntent.putExtra("dogName", identifyResponseDto.name);
                     dogBreedIntent.putExtra("dogDescription", identifyResponseDto.description);
@@ -182,18 +188,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 }
             }
         });
-    }
-
-    private void setButtonClickListeners() {
-        setClickListener(btnUpload, this::onClickButtonUpload);
-        setClickListener(btnHistory, this::onClickButtonHistory);
-        setClickListener(btnMenu, this::onClickButtonMenu);
-        setClickListener(btnGallery, this::onClickButtonGallery);
-        setClickListener(btnCamera, this::onClickButtonCamera);
-    }
-
-    private void setClickListener(View view, View.OnClickListener listener) {
-        view.setOnClickListener(listener);
     }
 
     private void onClickButtonUpload(View view) {

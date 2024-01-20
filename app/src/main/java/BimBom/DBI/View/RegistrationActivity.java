@@ -17,11 +17,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
 import BimBom.DBI.R;
 
 public class RegistrationActivity extends AppCompatActivity {
-
     private FirebaseAuth firebaseAuth;
     private EditText emailET, passwordET, passwordRepeatET;
     private TextView tvInfo;
@@ -32,70 +30,67 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        initializeViews();
+        setupFirebase();
+        setupDialog();
+        setupFieldListeners();
+        setupButtonClickListeners();
+    }
 
-        firebaseAuth = FirebaseAuth.getInstance();
+    private void initializeViews() {
         emailET = findViewById(R.id.etEmail);
         passwordET = findViewById(R.id.etPassword);
         passwordRepeatET = findViewById(R.id.etPasswordRepeat);
         btnSign = findViewById(R.id.btnSingUp);
         btnBack = findViewById(R.id.btnBack);
+        btnOk = registrationDialog.findViewById(R.id.btnOk);
+        tvInfo = registrationDialog.findViewById(R.id.tvInfo);
+    }
+
+    private void setupFirebase() {
+        firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    private void setupDialog() {
         registrationDialog = new Dialog(this);
         registrationDialog.setContentView(R.layout.info_dialog);
         if (registrationDialog.getWindow() != null) {
             Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
             registrationDialog.getWindow().setBackgroundDrawable(drawable);
         }
-        btnOk = registrationDialog.findViewById(R.id.btnOk);
-        tvInfo = registrationDialog.findViewById(R.id.tvInfo);
-        setupFieldListeners();
-        setupButtonClickListeners();
     }
 
     private void setupButtonClickListeners() {
-        btnSign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkFields()) {
-                    register();
-                }
-            }
-        });
-
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btnSign.setOnClickListener(this::onSignButtonClick);
+        btnBack.setOnClickListener(this::onBackButtonClick);
     }
 
     private void setupFieldListeners() {
-        emailET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    checkEmailField();
-                }
-            }
-        });
+        emailET.setOnFocusChangeListener(this::onEmailFocusChange);
+        passwordET.setOnFocusChangeListener(this::onPasswordFocusChange);
+        passwordRepeatET.setOnFocusChangeListener(this::onPasswordFocusChange);
+    }
 
-        passwordET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    checkPasswordField();
-                }
-            }
-        });
+    private void onSignButtonClick(View view) {
+        if (checkFields()) {
+            register();
+        }
+    }
 
-        passwordRepeatET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    checkPasswordField();
-                }
-            }
-        });
+    private void onBackButtonClick(View view) {
+        finish();
+    }
+
+    private void onEmailFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+            checkEmailField();
+        }
+    }
+
+    private void onPasswordFocusChange(View v, boolean hasFocus) {
+        if (!hasFocus) {
+            checkPasswordField();
+        }
     }
 
     private boolean checkFields() {
@@ -111,7 +106,6 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             emailET.setError(null);
         }
-
 
         if (TextUtils.isEmpty(password)) {
             passwordET.setError(getString(R.string.password_is_empty));
@@ -136,7 +130,6 @@ public class RegistrationActivity extends AppCompatActivity {
             passwordRepeatET.setError(null);
         }
         return fieldsValid;
-
     }
 
     private void checkEmailField() {
@@ -159,6 +152,7 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             passwordET.setError(null);
         }
+
         if (TextUtils.isEmpty(confirmPassword)) {
             passwordRepeatET.setError(getString(R.string.password_is_same));
         } else if (!isSixCharacters(confirmPassword)) {
@@ -181,29 +175,40 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            tvInfo.setText(getString(R.string.login_succesfull));
-                            registrationDialog.show();
-                            btnOk.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            });
+                            handleSuccessfulRegistration();
                         } else {
-                            tvInfo.setText(getString(R.string.login_succesfull_error));
-                            registrationDialog.show();
-                            btnOk.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    registrationDialog.dismiss();
-                                }
-                            });
+                            handleFailedRegistration();
                         }
                     }
                 });
     }
 
+    private void handleSuccessfulRegistration() {
+        tvInfo.setText(getString(R.string.login_succesfull));
+        registrationDialog.show();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMainActivity();
+            }
+        });
+    }
+
+    private void handleFailedRegistration() {
+        tvInfo.setText(getString(R.string.login_succesfull_error));
+        registrationDialog.show();
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registrationDialog.dismiss();
+            }
+        });
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
+        finish();
+    }
 }
