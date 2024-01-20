@@ -29,7 +29,7 @@ public class ConnectionServer {
         OkHttpClient client = clientBuilder.build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://130.162.37.11/")
+                .baseUrl("https://193.122.12.41/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

@@ -55,4 +55,5 @@
     <string name="cancle">Cancel</string>
     <string name="not_found">X509TrustManager not found</string>
     <string name="uploading">Uploading... Please wait</string>
+    <string name="history">HISTORY</string>
 </resources>

@@ -13,9 +13,10 @@
         android:background="@drawable/_bg__main_menu_shape"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <View
         android:id="@+id/rectangle"
@@ -31,15 +32,36 @@
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="128dp"
-        android:layout_height="94dp"
+        android:layout_width="78dp"
+        android:layout_height="66dp"
         android:layout_marginBottom="379dp"
         app:layout_constraintBottom_toBottomOf="@+id/_bgmain_menu"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bgmain_menu"
-        app:layout_constraintVertical_bias="0.179"
+        app:layout_constraintVertical_bias="0.108"
         app:srcCompat="@drawable/logo1" />
+
+    <TextView
+        android:id="@+id/tvHistory"
+        android:layout_width="340dp"
+        android:layout_height="29dp"
+        android:layout_gravity="center_horizontal|center"
+        android:autoSizeMaxTextSize="20sp"
+        android:ellipsize="none"
+        android:fontFamily="@font/julius_sans_one"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="@string/history"
+        android:textColor="@color/dog_breed_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/_bgmain_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.159" />
 
     <Button
         android:id="@+id/btnBack"
