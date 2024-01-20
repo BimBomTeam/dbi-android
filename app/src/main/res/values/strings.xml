@@ -46,14 +46,16 @@
     <string name="error_loin_google">Google login error</string>
     <string name="Logged">LOGGED IN</string>
     <string name="login_error">LOGIN ERROR</string>
-    <string name="account_deleted">Account deleted successfully</string>
-    <string name="account_deleted_erroe">Failed to delete the account</string>
+    <string name="deleted">Account deleted successfully</string>
+    <string name="account_deleted_error">Failed to delete the account</string>
     <string name="logged_out">Logged out</string>
     <string name="you_are_logged">You are logged in</string>
     <string name="photo_selected">Please select a photo</string>
     <string name="you_must_log_to_history">You must log in to view history</string>
-    <string name="cancle">Cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="not_found">X509TrustManager not found</string>
     <string name="uploading">Uploading... Please wait</string>
     <string name="history">HISTORY</string>
+    <string name="dog_is_not_detected">Dog is not detected in the photo</string>
+    <string name="in_develop">This function in develop</string>
 </resources>

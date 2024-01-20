@@ -14,80 +14,87 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import BimBom.DBI.R;
+import BimBom.DBI.Service.JwtManager;
 
 public class SettingsActivity extends AppCompatActivity {
-    private Button btnBack, btnlogout, btnDeleteAccont, btnEditAccount, btnClearHistory;
-
-    private void initializeViews() {
-        btnBack = findViewById(R.id.btnBack);
-        btnlogout = findViewById(R.id.btnLogout);
-        btnDeleteAccont = findViewById(R.id.btnDeleteAccont);
-        btnEditAccount = findViewById(R.id.btnEditAccount);
-        btnClearHistory = findViewById(R.id.btnClearHistory);
-    }
-
-    private boolean isUserLoggedIn() {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        return currentUser != null;
-    }
-
-    private void buttonsEnabled() {
-        if (!isUserLoggedIn()) {
-            btnlogout.setEnabled(false);
-            btnDeleteAccont.setEnabled(false);
-            btnEditAccount.setEnabled(false);
-            btnClearHistory.setEnabled(false);
-
-        } else {
-            btnlogout.setEnabled(true);
-            btnDeleteAccont.setEnabled(true);
-            btnEditAccount.setEnabled(true);
-            btnClearHistory.setEnabled(true);
-        }
-    }
+    private Button btnBack, btnLogout, btnDeleteAccount, btnEditAccount, btnClearHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
         initializeViews();
-        buttonsEnabled();
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        btnlogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(SettingsActivity.this, R.string.logged_out, Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
-        btnDeleteAccont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                if (mAuth.getCurrentUser() != null) {
-                    mAuth.getCurrentUser().delete()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(SettingsActivity.this, R.string.account_deleted, Toast.LENGTH_SHORT).show();
-                                        finish();
-                                    } else {
-                                        Toast.makeText(SettingsActivity.this, R.string.account_deleted_erroe, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
-            }
+        setupButtonState();
+        setupButtonClickListeners();
+    }
+
+    private void initializeViews() {
+        btnBack = findViewById(R.id.btnBack);
+        btnLogout = findViewById(R.id.btnLogout);
+        btnDeleteAccount = findViewById(R.id.btnDeleteAccont);
+        btnEditAccount = findViewById(R.id.btnEditAccount);
+        btnClearHistory = findViewById(R.id.btnClearHistory);
+    }
+
+    private void setupButtonState() {
+        if (!isUserLoggedIn()) {
+            setButtonsEnabled(false);
+        } else {
+            setButtonsEnabled(true);
+        }
+    }
+
+    private boolean isUserLoggedIn() {
+        JwtManager jwtManager = new JwtManager(this);
+        String jwtToken = jwtManager.getStoredJwtToken();
+        return jwtToken != null && !jwtToken.isEmpty();
+    }
+
+    private void setButtonsEnabled(boolean isEnabled) {
+        btnLogout.setEnabled(isEnabled);
+        btnDeleteAccount.setEnabled(isEnabled);
+        btnEditAccount.setEnabled(isEnabled);
+        btnClearHistory.setEnabled(isEnabled);
+    }
+
+    private void setupButtonClickListeners() {
+        btnBack.setOnClickListener(v -> finish());
+
+        btnLogout.setOnClickListener(v -> {
+            JwtManager jwtManager = new JwtManager(this);
+            jwtManager.clearJwtToken();
+            Toast.makeText(SettingsActivity.this, R.string.logged_out, Toast.LENGTH_SHORT).show();
+            finish();
         });
 
+        btnEditAccount.setOnClickListener(v -> {
+            Toast.makeText(SettingsActivity.this, R.string.in_develop, Toast.LENGTH_SHORT).show();
+        });
+
+        btnDeleteAccount.setOnClickListener(v -> {
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+
+            if (currentUser != null) {
+                currentUser.delete()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                handleAccountDeletionSuccess();
+                            } else {
+                                handleAccountDeletionFailure();
+                            }
+                        });
+            }
+        });
+    }
+
+    private void handleAccountDeletionSuccess() {
+        Toast.makeText(SettingsActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    private void handleAccountDeletionFailure() {
+        Toast.makeText(SettingsActivity.this, R.string.account_deleted_error, Toast.LENGTH_SHORT).show();
     }
 }
-

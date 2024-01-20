@@ -33,7 +33,6 @@ public class JwtManager {
     }
 
 
-
     public String getStoredJwtToken() {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return preferences.getString(KEY_JWT_TOKEN, null);
@@ -43,6 +42,18 @@ public class JwtManager {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(KEY_JWT_TOKEN, jwtToken);
+        editor.apply();
+    }
+
+    public boolean hasJwtToken() {
+        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String jwtToken = preferences.getString(KEY_JWT_TOKEN, null);
+        return jwtToken != null && !jwtToken.isEmpty();
+    }
+    public void clearJwtToken() {
+        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(KEY_JWT_TOKEN);
         editor.apply();
     }
 

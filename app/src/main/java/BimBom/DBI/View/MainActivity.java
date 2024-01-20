@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -43,6 +44,7 @@ import javax.net.ssl.X509TrustManager;
 import BimBom.DBI.Model.PhotoModel;
 import BimBom.DBI.R;
 
+import BimBom.DBI.Service.JwtManager;
 import BimBom.DBI.Utils.SslHelper;
 import BimBom.DBI.ViewModel.PhotoViewModel;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -57,13 +59,15 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private static final int REQUEST_STORAGE_PERMISSION = 3;
     private final Executor executor = Executors.newSingleThreadExecutor();
     private ImageView imageView;
-    private Button btnCamera , btnGallery,btnUpload ,btnMenu ,btnHistory;
-    private Bitmap photo, unscaledPhoto ,bitmap;
+    private Button btnCamera, btnGallery, btnUpload, btnMenu, btnHistory, btnOk;
+    private TextView tvInfo;
+    private Bitmap photo, unscaledPhoto, bitmap;
     private NavigationView nvMenu;
-    private Dialog progressDialog;
-    private MenuItem menu_item_login ,menu_item_settings ,menu_item_help,menu_item_user;
+    private Dialog progressDialog, infoDialog;
+    private MenuItem menu_item_login, menu_item_settings, menu_item_help, menu_item_user;
     public Intent dogBreedIntent;
     public boolean strartDownload = false;
+
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private void initializeViews() {
         initializeProgressDialog();
+        initializeInfoDialog();
 
         imageView = findViewById(R.id.imageView);
         btnCamera = findViewById(R.id.btnCamera);
@@ -102,6 +107,20 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
     }
 
+    private void initializeInfoDialog() {
+        infoDialog = new Dialog(this);
+        infoDialog.setContentView(R.layout.info_dialog);
+
+        if (infoDialog.getWindow() != null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
+            infoDialog.getWindow().setBackgroundDrawable(drawable);
+        }
+
+        btnOk = infoDialog.findViewById(R.id.btnOk);
+        tvInfo = infoDialog.findViewById(R.id.tvInfo);
+        tvInfo.setText(getString(R.string.dog_is_not_detected));
+    }
+
     private void setButtonClickListeners() {
         setClickListener(btnUpload, this::onClickButtonUpload);
         setClickListener(btnHistory, this::onClickButtonHistory);
@@ -110,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setClickListener(btnCamera, this::onClickButtonCamera);
         setNavigationViewListener();
     }
+
     private void setClickListener(View view, View.OnClickListener listener) {
         view.setOnClickListener(listener);
     }
@@ -219,7 +239,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
         startActivity(intent);
     }
-    private void showLogin(){
+
+    private void showLogin() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(loginIntent);
     }
@@ -250,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     new PermissionRequest.Builder(this, CAMERA_PERMISSION_REQUEST_CODE, perms)
                             .setRationale(R.string.cameraPermission)
                             .setPositiveButtonText(R.string.ok)
-                            .setNegativeButtonText(R.string.cancle)
+                            .setNegativeButtonText(R.string.cancel)
                             .build()
             );
         }
@@ -358,9 +379,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private boolean isUserLoggedIn() {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        return currentUser != null;
-    }
+        JwtManager jwtManager = new JwtManager(this);
+        String jwtToken = jwtManager.getStoredJwtToken();
 
+        return jwtToken != null && !jwtToken.isEmpty();
+    }
 }

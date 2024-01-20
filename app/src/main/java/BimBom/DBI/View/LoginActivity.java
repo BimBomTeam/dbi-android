@@ -20,7 +20,6 @@ import BimBom.DBI.R;
 import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final int RC_GOOGLE_SIGN_IN = 1001;
 
     private EditText etLogin, etPassword;
     private Button btnLogin, btnLoginWithGoogle, btnRegistration, btnBack, btnOk;
@@ -65,8 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(AuthViewModel.class);
         authViewModel.setContext(getApplicationContext());
 
-        authViewModel.getUserLiveData().observe(this, userModel -> {
-            if (userModel != null) {
+        authViewModel.getLoginResponseLiveData().observe(this, loginResponseDto -> {
+            if (loginResponseDto != null) {
                 handleSuccessfulLogin();
             } else {
                 handleFailedLogin();
@@ -124,24 +123,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onLoginWithGoogleClick() {
-        Intent signInIntent = authViewModel.getGoogleSignInIntent();
-        if (signInIntent != null) {
-            startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
-        } else {
-            Toast.makeText(this, R.string.error_loin_google, Toast.LENGTH_SHORT).show();
-        }
+        Toast.makeText(LoginActivity.this, R.string.in_develop, Toast.LENGTH_SHORT).show();
+
     }
 
     private void onClickRegistration() {
         Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_GOOGLE_SIGN_IN) {
-            authViewModel.handleGoogleSignInResult(data, this);
-        }
     }
 }

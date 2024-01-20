@@ -13,4 +13,7 @@ public interface ApiService {
 
     @POST("api/Auth/login")
     Call<LoginResponseDto> loginUser(@Body UserCredential userCredential);
+
+    @POST("api/Auth/register")
+    Call<LoginResponseDto> registerUser(@Body UserCredential userCredential);
 }

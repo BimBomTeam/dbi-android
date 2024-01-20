@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import BimBom.DBI.R;
+import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -27,6 +29,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private TextView tvInfo;
     private Button btnSign, btnBack, btnOk;
     private Dialog registrationDialog;
+    private AuthViewModel authViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,15 +173,8 @@ public class RegistrationActivity extends AppCompatActivity {
     private void register() {
         String email = emailET.getText().toString().trim();
         String password = passwordET.getText().toString().trim();
-
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        handleRegistrationSuccess();
-                    } else {
-                        handleRegistrationFailure();
-                    }
-                });
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        authViewModel.registerUser(email, password);
     }
 
     private void handleRegistrationSuccess() {
