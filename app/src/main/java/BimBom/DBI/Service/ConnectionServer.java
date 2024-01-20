@@ -1,5 +1,7 @@
 package BimBom.DBI.Service;
 
+import android.content.Context;
+
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ConnectionServer {
     private static ConnectionServer instance;
     private ApiService apiService;
+    private Context context;
 
     private ConnectionServer() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -27,6 +30,7 @@ public class ConnectionServer {
         clientBuilder.writeTimeout(200, TimeUnit.SECONDS);
 
         OkHttpClient client = clientBuilder.build();
+        clientBuilder.addInterceptor(new JwtInterceptor(context));
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://193.122.12.41/")

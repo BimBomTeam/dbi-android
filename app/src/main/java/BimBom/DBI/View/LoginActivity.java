@@ -101,12 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            authViewModel.loginUser(email, password);
-            UserModel userModel = authViewModel.getUserLiveData().getValue();
-            String tmp = userModel.generateJwtToken();
-            Log.d("waznewchuj", tmp);
         } catch (Exception e) {
-            Log.e("Logifajnedupa", e.getMessage());
         }
     }
     private void showError(String errorMessage) {

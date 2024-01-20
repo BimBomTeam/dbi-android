@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,12 +58,12 @@ public class HistoryActivity extends AppCompatActivity {
 
     private List<Dog> generateSampleDogList() {
         List<Dog> sampleDogList = new ArrayList<>();
-        sampleDogList.add(new Dog("Labrador Retriever", "http://193.122.12.41/image.png"));
-        sampleDogList.add(new Dog("German Shepherd", "http://193.122.12.41/image.png"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png"));
+        sampleDogList.add(new Dog("Labrador Retriever", "http://193.122.12.41/image.png","data"));
+        sampleDogList.add(new Dog("German Shepherd", "http://193.122.12.41/image.png","data"));
+        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
+        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
+        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
+        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
         return sampleDogList;
     }
 
@@ -80,8 +81,7 @@ public class HistoryActivity extends AppCompatActivity {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
-            generateSampleDogList().remove(position);
-            historyAdapter.notifyItemRemoved(position);
+            historyAdapter.removeDog(position);
         }
 
         @Override

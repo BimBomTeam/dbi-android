@@ -1,12 +1,25 @@
 package BimBom.DBI.View;
 
+import java.util.Date;
+
 public class Dog {
     private String dogBreed;
     private String dogAvatar;
 
-    public Dog(String dogBreed, String dogAvatar) {
+    private String dogDate;
+
+    public Dog(String dogBreed, String dogAvatar,String dogDate) {
         this.dogBreed = dogBreed;
         this.dogAvatar = dogAvatar;
+        this.dogDate = dogDate;
+    }
+
+    public String getDogDate() {
+        return dogDate;
+    }
+
+    public void setDogDate(String dogDate) {
+        this.dogDate = dogDate;
     }
 
     public String getDogBreed() {

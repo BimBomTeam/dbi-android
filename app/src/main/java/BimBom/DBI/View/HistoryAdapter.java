@@ -37,7 +37,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.DogViewH
     public void onBindViewHolder(@NonNull DogViewHolder holder, int position) {
         Dog dog = dogList.get(position);
         holder.dogBreedTextView.setText(dog.getDogBreed());
-
+        holder.dogDateTextView.setText(dog.getDogDate());
         WebSettings webSettings = holder.dogAvatarWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setUseWideViewPort(true);
@@ -58,8 +58,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.DogViewH
         TextView dogBreedTextView;
         WebView dogAvatarWebView;
 
+        TextView dogDateTextView;
+
         public DogViewHolder(@NonNull View itemView) {
             super(itemView);
+            dogDateTextView=itemView.findViewById(R.id.tvDate);
             dogBreedTextView = itemView.findViewById(R.id.tvDogBreed);
             dogAvatarWebView = itemView.findViewById(R.id.wvAvatar);
         }
