@@ -1,5 +1,6 @@
 package BimBom.DBI.ViewModel;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -25,7 +26,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotoViewModel extends ViewModel {
-    private SSLContext context;
+    private SSLContext context1;
+    private Context context;
     private X509TrustManager trustManager;
     private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
     private MutableLiveData<Boolean> progressBarVisibility = new MutableLiveData<>();
@@ -55,7 +57,7 @@ public class PhotoViewModel extends ViewModel {
     }
 
     public void setSslContext(SSLContext context) {
-        this.context = context;
+        this.context1 = context;
     }
 
     public void setTrustManager(X509TrustManager manager) {
@@ -65,7 +67,7 @@ public class PhotoViewModel extends ViewModel {
     private void sendImageToApi(PhotoModel photoModel) {
         progressBarVisibility.setValue(true);
 
-        ConnectionServer connectionServer = ConnectionServer.getInstance();
+        ConnectionServer connectionServer = ConnectionServer.getInstance(context);
         ApiService apiService = connectionServer.getApiService();
 
         Call<IdentifyResponseDto> call = apiService.uploadPhoto(new IdentifyRequestDto(photoModel.getBase64Image()));

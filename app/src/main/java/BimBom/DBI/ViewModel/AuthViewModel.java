@@ -17,22 +17,44 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 
+import BimBom.DBI.Model.Dto.IdentifyRequestDto;
+import BimBom.DBI.Model.Dto.IdentifyResponseDto;
+import BimBom.DBI.Model.Dto.LoginResponseDto;
+import BimBom.DBI.Model.Dto.UserCredential;
+import BimBom.DBI.Service.ApiService;
+import BimBom.DBI.Service.ConnectionServer;
+import BimBom.DBI.Service.JwtInterceptor;
+import BimBom.DBI.Service.JwtManager;
 import BimBom.DBI.View.LoginActivity;
 import BimBom.DBI.Model.UserModel;
 import BimBom.DBI.R;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AuthViewModel extends ViewModel {
+    private  JwtManager jwtManager;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
     private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "AuthViewModel";
-    private Application application;
+    private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
+    public MutableLiveData<UserCredential> getUserCredential() {
+        return getUserCredential();
+    }
+
+    private Application application;
+    private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
     private Context context;
 
     public AuthViewModel() {
 
     }
+
     public void setContext(Context context) {
         this.context = context;
     }
@@ -43,6 +65,7 @@ public class AuthViewModel extends ViewModel {
         }
         this.application = application;
         this.context = context;
+        this.jwtManager = new JwtManager(context);
     }
 
 
@@ -116,19 +139,39 @@ public class AuthViewModel extends ViewModel {
 
 
     public void loginUser(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            UserModel userModel = new UserModel(user.getEmail(), user.getUid());
-                            userLiveData.setValue(userModel);
-                        }
-                    } else {
-                        userLiveData.setValue(null);
+        ConnectionServer connectionServer = ConnectionServer.getInstance(context);
+        ApiService apiService = connectionServer.getApiService();
+
+        UserCredential userCredential = new UserCredential(email, password);
+
+        Call<LoginResponseDto> call = apiService.loginUser(userCredential);
+        call.enqueue(new Callback<LoginResponseDto>() {
+            @Override
+            public void onResponse(Call<LoginResponseDto> call, Response<LoginResponseDto> response) {
+                if (response.isSuccessful()) {
+                    LoginResponseDto loginResponse = response.body();
+                    if (loginResponse != null) {
+                        String jwtToken = loginResponse.getToken();
+                        JwtManager jwtManager = new JwtManager(context);
+                        jwtManager.saveJwtTokenToPreferences(jwtToken);
+                        String storedToken = jwtManager.getJwtToken();
+                        Log.d("logingit", "JWT token: " + storedToken);
+
                     }
-                });
+                } else {
+                    uploadStatus.setValue("Błąd podczas logowania. Kod: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponseDto> call, Throwable t) {
+                Log.e("Error", "Błąd podczas logowania: " + t.getMessage());
+                errorLiveData.setValue("Błąd podczas logowania: " + t.getMessage());
+            }
+        });
     }
+
+
 
     public MutableLiveData<UserModel> getUserLiveData() {
         return userLiveData;

@@ -24,16 +24,22 @@ public class JwtManager {
         this.context = context;
     }
 
-    public void retrieveJwtTokenFromServer(String serverUrl) {
-        new FetchTokenTask().execute(serverUrl);
+    public String getJwtToken() {
+        String storedToken = getStoredJwtToken();
+        if (storedToken != null) {
+            return storedToken;
+        }
+        return null;
     }
+
+
 
     public String getStoredJwtToken() {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return preferences.getString(KEY_JWT_TOKEN, null);
     }
 
-    private void saveJwtTokenToPreferences(String jwtToken) {
+    public void saveJwtTokenToPreferences(String jwtToken) {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(KEY_JWT_TOKEN, jwtToken);

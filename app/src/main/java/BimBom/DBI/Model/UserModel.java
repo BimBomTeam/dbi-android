@@ -5,20 +5,18 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class UserModel {
     private String email;
-    private String uid;
+    private String password;
 
-    public UserModel(String email, String uid) {
+    public UserModel(String email, String password) {
         this.email = email;
-        this.uid = uid;
+        this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
-    public String generateJwtToken() {
-        String secretKey = "eyJhbGciOiJIUzUxMiJ9meyJzdWIiOiJudkNvaDQ0bkxRaDM1OWR4WlpHdWViUDJjY0QyIn0mQlESTFmpgHVbUCUIQml5NaCMMJSFQWFuMmbf8iFvV1vdZsZrKuJ9bXgE6Ha63hD8LT6gLwDkA3te0xcg8GaFlQ";
-
-        return Jwts.builder()
-                .setSubject(this.uid)
-                .signWith(SignatureAlgorithm.HS512, secretKey)
-                .compact();
+    public String getPassword() {
+        return password;
     }
 }

@@ -20,73 +20,68 @@ import BimBom.DBI.R;
 import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final int RC_GOOGLE_SIGN_IN = 1001;
+
     private EditText etLogin, etPassword;
     private Button btnLogin, btnLoginWithGoogle, btnRegistration, btnBack, btnOk;
     private Dialog loginDialog;
     private TextView tvSignInfo;
     private AuthViewModel authViewModel;
-    private static final int RC_GOOGLE_SIGN_IN = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         initializeViews();
         setupLoginDialog();
         setupViewModel();
+        setupClickListeners();
     }
 
     private void initializeViews() {
-        btnOk = loginDialog.findViewById(R.id.btnOk);
-        tvSignInfo = loginDialog.findViewById(R.id.tvInfo);
         etLogin = findViewById(R.id.etLogin);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnLoginWithGoogle = findViewById(R.id.btnLoginWithGoogle);
         btnRegistration = findViewById(R.id.btnRegistration);
         btnBack = findViewById(R.id.btnBack);
-        loginDialog.setContentView(R.layout.info_dialog);
+    }
 
-        setButtonClickListeners();
-    }
-    private void setButtonClickListeners() {
-        btnLogin.setOnClickListener(this::onLoginButtonClick);
-        btnLoginWithGoogle.setOnClickListener(this::onLoginWithGoogleButtonClick);
-        btnRegistration.setOnClickListener(this::onRegistrationButtonClick);
-        btnBack.setOnClickListener(this::onBackButtonClick);
-    }
     private void setupLoginDialog() {
         loginDialog = new Dialog(this);
+        loginDialog.setContentView(R.layout.info_dialog);
 
         if (loginDialog.getWindow() != null) {
             Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
             loginDialog.getWindow().setBackgroundDrawable(drawable);
         }
+
+        btnOk = loginDialog.findViewById(R.id.btnOk);
+        tvSignInfo = loginDialog.findViewById(R.id.tvInfo);
     }
+
     private void setupViewModel() {
         authViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(AuthViewModel.class);
         authViewModel.setContext(getApplicationContext());
 
         authViewModel.getUserLiveData().observe(this, userModel -> {
             if (userModel != null) {
-                handleUserModelLogin(userModel);
+                handleSuccessfulLogin();
             } else {
-                handleUserModelError();
+                handleFailedLogin();
             }
         });
     }
-    private void handleUserModelLogin(UserModel userModel) {
-        tvSignInfo.setText(getString(R.string.Logged));
-        loginDialog.show();
-        btnOk.setOnClickListener(v -> finish());
+
+    private void setupClickListeners() {
+        btnLogin.setOnClickListener(v -> onLoginClick(v));
+        btnLoginWithGoogle.setOnClickListener(v -> onLoginWithGoogleClick());
+        btnRegistration.setOnClickListener(v -> onClickRegistration());
+        btnBack.setOnClickListener(v -> finish());
     }
 
-    private void handleUserModelError() {
-        tvSignInfo.setText(R.string.login_error);
-        loginDialog.show();
-        btnOk.setOnClickListener(v -> loginDialog.dismiss());
-    }
-    private void onLoginButtonClick(View view) {
+    private void onLoginClick(View view) {
         try {
             String email = etLogin.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
@@ -101,9 +96,23 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
+            authViewModel.loginUser(email, password);
         } catch (Exception e) {
         }
     }
+
+    private void handleSuccessfulLogin() {
+        tvSignInfo.setText(getString(R.string.Logged));
+        loginDialog.show();
+        btnOk.setOnClickListener(v -> finish());
+    }
+
+    private void handleFailedLogin() {
+        tvSignInfo.setText(R.string.login_error);
+        loginDialog.show();
+        btnOk.setOnClickListener(v -> loginDialog.dismiss());
+    }
+
     private void showError(String errorMessage) {
         tvSignInfo.setText(errorMessage);
         loginDialog.show();
@@ -114,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    private void onLoginWithGoogleButtonClick(View view) {
+    private void onLoginWithGoogleClick() {
         Intent signInIntent = authViewModel.getGoogleSignInIntent();
         if (signInIntent != null) {
             startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
@@ -122,14 +131,12 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.error_loin_google, Toast.LENGTH_SHORT).show();
         }
     }
-    private void onRegistrationButtonClick(View view) {
+
+    private void onClickRegistration() {
         Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
         startActivity(intent);
     }
 
-    private void onBackButtonClick(View view) {
-        finish();
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -138,4 +145,3 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
-

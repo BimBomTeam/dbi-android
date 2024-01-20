@@ -2,14 +2,8 @@ package BimBom.DBI.Service;
 
 import android.content.Context;
 
-import androidx.lifecycle.MutableLiveData;
-
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509TrustManager;
-
-import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.Utils.UnsafeOkHttpClient;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -21,7 +15,9 @@ public class ConnectionServer {
     private ApiService apiService;
     private Context context;
 
-    private ConnectionServer() {
+    private ConnectionServer(Context context) {
+        this.context = context;
+
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -29,8 +25,11 @@ public class ConnectionServer {
         clientBuilder.readTimeout(200, TimeUnit.SECONDS);
         clientBuilder.writeTimeout(200, TimeUnit.SECONDS);
 
+        // Create JwtInterceptor instance and add it to OkHttpClient
+        JwtInterceptor jwtInterceptor = new JwtInterceptor(context);
+        clientBuilder.addInterceptor(jwtInterceptor);
+
         OkHttpClient client = clientBuilder.build();
-        clientBuilder.addInterceptor(new JwtInterceptor(context));
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://193.122.12.41/")
@@ -41,9 +40,9 @@ public class ConnectionServer {
         apiService = retrofit.create(ApiService.class);
     }
 
-    public static synchronized ConnectionServer getInstance() {
+    public static synchronized ConnectionServer getInstance(Context context) {
         if (instance == null) {
-            instance = new ConnectionServer();
+            instance = new ConnectionServer(context);
         }
         return instance;
     }
