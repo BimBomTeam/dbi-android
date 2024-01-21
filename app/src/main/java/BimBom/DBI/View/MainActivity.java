@@ -19,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -28,22 +27,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
-
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
-
 import BimBom.DBI.Model.PhotoModel;
 import BimBom.DBI.R;
-
 import BimBom.DBI.Service.JwtManager;
 import BimBom.DBI.Utils.SslHelper;
 import BimBom.DBI.ViewModel.PhotoViewModel;
@@ -204,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             });
         }
     }
-
 
     private void onClickButtonHistory(View view) {
         if (!isUserLoggedIn()) {

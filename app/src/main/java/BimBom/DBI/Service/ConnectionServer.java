@@ -26,8 +26,7 @@ public class ConnectionServer {
         clientBuilder.readTimeout(200, TimeUnit.SECONDS);
         clientBuilder.writeTimeout(200, TimeUnit.SECONDS);
 
-        // Create JwtInterceptor instance and add it to OkHttpClient
-        JwtInterceptor jwtInterceptor = new JwtInterceptor(context); // Pass the context here
+        JwtInterceptor jwtInterceptor = new JwtInterceptor(context);
         clientBuilder.addInterceptor(jwtInterceptor);
 
         OkHttpClient client = clientBuilder.build();

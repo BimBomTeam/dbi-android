@@ -3,14 +3,14 @@ package BimBom.DBI.Model.Dto;
 import java.util.Date;
 
 public class HistoryDto {
-    private int Id;
+    private int id;
     private int dogBreedId;
     private String dogBreedName;
     private Date createdDate;
     private String avatarLink;
 
     public HistoryDto(int id, int dogBreedId, String dogBreedName, Date createdDate, String avatarLink) {
-        this.Id = id;
+        this.id = id;
         this.dogBreedId = dogBreedId;
         this.dogBreedName = dogBreedName;
         this.createdDate = createdDate;
@@ -26,11 +26,11 @@ public class HistoryDto {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        id = id;
     }
 
     public int getDogBreedId() {

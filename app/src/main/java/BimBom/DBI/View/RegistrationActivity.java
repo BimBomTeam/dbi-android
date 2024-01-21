@@ -14,14 +14,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import BimBom.DBI.R;
 import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private FirebaseAuth firebaseAuth;
     private EditText emailET, passwordET, passwordRepeatET;
     private TextView tvInfo;
     private Button btnSign, btnBack, btnOk;
@@ -39,7 +36,6 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        firebaseAuth = FirebaseAuth.getInstance();
         emailET = findViewById(R.id.etEmail);
         passwordET = findViewById(R.id.etPassword);
         passwordRepeatET = findViewById(R.id.etPasswordRepeat);
@@ -90,7 +86,6 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        // Additional checkFields() on text change
         TextWatcher textWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}

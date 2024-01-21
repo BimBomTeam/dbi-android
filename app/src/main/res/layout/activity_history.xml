@@ -90,4 +90,22 @@
         tools:ignore="SpeakableTextPresentCheck"
         tools:listitem="@layout/item_rv_dog" />
 
+    <TextView
+        android:id="@+id/tvHistoryInfo"
+        android:layout_width="match_parent"
+        android:layout_height="143dp"
+        android:layout_marginBottom="260dp"
+        android:fontFamily="@font/julius_sans_one"
+        android:gravity="center"
+        android:text="@string/empty_history"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/rectangle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/_bgmain_menu"
+        app:layout_constraintVertical_bias="0.946" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

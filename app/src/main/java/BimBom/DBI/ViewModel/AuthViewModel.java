@@ -8,8 +8,6 @@ import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -29,9 +27,7 @@ import retrofit2.Response;
 
 public class AuthViewModel extends ViewModel {
     private JwtManager jwtManager;
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private MutableLiveData<UserModel> userLiveData = new MutableLiveData<>();
-    private GoogleSignInClient mGoogleSignInClient;
     private static final String TAG = "AuthViewModel";
     private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
 
@@ -182,7 +178,6 @@ public class AuthViewModel extends ViewModel {
             }
         });
     }
-
 
     public MutableLiveData<UserModel> getUserLiveData() {
         return userLiveData;

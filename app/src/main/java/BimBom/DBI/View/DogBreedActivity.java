@@ -6,10 +6,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.R;
 
 public class DogBreedActivity extends AppCompatActivity {

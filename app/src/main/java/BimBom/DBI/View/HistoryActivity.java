@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import BimBom.DBI.Model.Dto.HistoryDto;
 import BimBom.DBI.R;
@@ -26,10 +27,12 @@ import BimBom.DBI.ViewModel.HistoryViewModel;
 
 public class HistoryActivity extends AppCompatActivity {
     private Button btnBack;
+    private TextView tvHistoryInfo;
     private RecyclerView recyclerView;
     private HistoryAdapter historyAdapter;
     private HistoryViewModel historyViewModel;
     private List<HistoryDto> dogList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void initializeViews() {
         btnBack = findViewById(R.id.btnBack);
+        tvHistoryInfo = findViewById(R.id.tvHistoryInfo);
         recyclerView = findViewById(R.id.recyclerView);
         setOnClickBtnBack();
     }
@@ -58,12 +62,10 @@ public class HistoryActivity extends AppCompatActivity {
         generateSampleDogList(historyList -> {
 
             dogList = new ArrayList<>(historyList);
-            historyAdapter = new HistoryAdapter(dogList, this);
+            historyAdapter = new HistoryAdapter(dogList, this, tvHistoryInfo);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(historyAdapter);
-
         });
-
     }
 
     private void generateSampleDogList(HistoryCallback callback) {
@@ -74,12 +76,19 @@ public class HistoryActivity extends AppCompatActivity {
             ArrayList<HistoryDto> sampleDogList = new ArrayList<>(historyList);
             callback.onHistoryLoaded(historyList);
         });
+        historyViewModel.getErrorLiveData().observe(this, Error -> {
+            Toast.makeText(HistoryActivity.this, Error, Toast.LENGTH_SHORT).show();
+            if (Error != null){
+                finish();
+            }
+        });
     }
 
     private void setupItemTouchHelper() {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
+
 
     ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         @Override

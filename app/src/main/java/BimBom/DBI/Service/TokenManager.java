@@ -7,7 +7,4 @@ public class TokenManager {
         jwtToken = token;
     }
 
-    public static String getToken() {
-        return jwtToken;
-    }
 }

@@ -9,12 +9,9 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import BimBom.DBI.Model.Dto.HistoryDto;
-import BimBom.DBI.Model.Dto.LoginResponseDto;
-import BimBom.DBI.Model.Dto.UserCredential;
 import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Service.ConnectionServer;
 import BimBom.DBI.Service.HistoryCallback;
-import BimBom.DBI.Service.JwtManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,6 +20,10 @@ public class HistoryViewModel extends ViewModel {
     MutableLiveData<List<HistoryDto>> historyResponseLiveData = new MutableLiveData<>();
     public MutableLiveData<List<HistoryDto>> getHistoryResponseLiveData() {
         return historyResponseLiveData;
+    }
+    private MutableLiveData<String> errorLiveData = new MutableLiveData<>();
+    public MutableLiveData<String> getErrorLiveData() {
+        return errorLiveData;
     }
     Context context;
     public void setContext(Context context) {
@@ -47,16 +48,18 @@ public class HistoryViewModel extends ViewModel {
                     List<HistoryDto> historyList = response.body();
                     if (historyList != null) {
                         historyResponseLiveData.setValue(historyList);
-                        callback.onHistoryLoaded(historyList); // Wywołaj callback po pomyślnym pobraniu danych.
+                        callback.onHistoryLoaded(historyList);
                     }
                 } else {
-
+                    Log.e("HistoryViewModel", "Błąd odpowiedzi HTTP: " + response.code());
+                    errorLiveData.setValue("Błąd podczas ładowania historii" + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<HistoryDto>> call, Throwable t) {
                 Log.e("Error", "Błąd podczas logowania: " + t.getMessage());
+                errorLiveData.setValue("Błąd podczas ładowania historii" + t.getMessage());
             }
         });
     }
