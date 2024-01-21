@@ -79,6 +79,8 @@
         android:layout_width="299dp"
         android:layout_height="288dp"
         android:layout_marginBottom="363dp"
+        android:overScrollMode="never"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
