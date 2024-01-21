@@ -66,5 +66,8 @@ public class SettingsActivity extends AppCompatActivity {
         btnDeleteAccount.setOnClickListener(v -> {
             Toast.makeText(SettingsActivity.this, R.string.in_develop, Toast.LENGTH_SHORT).show();
         });
+        btnClearHistory.setOnClickListener(v -> {
+            Toast.makeText(SettingsActivity.this, R.string.in_develop, Toast.LENGTH_SHORT).show();
+        });
     }
 }
