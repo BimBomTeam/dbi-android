@@ -15,6 +15,7 @@ public class ConnectionServer {
     private ApiService apiService;
     private Context context;
 
+
     private ConnectionServer(Context context) {
         this.context = context;
 
@@ -26,7 +27,7 @@ public class ConnectionServer {
         clientBuilder.writeTimeout(200, TimeUnit.SECONDS);
 
         // Create JwtInterceptor instance and add it to OkHttpClient
-        JwtInterceptor jwtInterceptor = new JwtInterceptor(context);
+        JwtInterceptor jwtInterceptor = new JwtInterceptor(context); // Pass the context here
         clientBuilder.addInterceptor(jwtInterceptor);
 
         OkHttpClient client = clientBuilder.build();

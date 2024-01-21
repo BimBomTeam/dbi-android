@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         if (photo != null) {
             progressDialog.show();
             PhotoModel photoModel = new PhotoModel(unscaledPhoto);
-            PhotoViewModel photoViewModel = new ViewModelProvider(MainActivity.this).get(PhotoViewModel.class);
+            PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
             Pair<SSLContext, X509TrustManager> sslPair = SslHelper.createSSLContext(getApplicationContext());
             SSLContext sslContext = sslPair.first;
             X509TrustManager trustManager = sslPair.second;
@@ -354,9 +354,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private boolean isUserLoggedIn() {
-        JwtManager jwtManager = new JwtManager(this); // 'this' refers to the context of MainActivity
+        JwtManager jwtManager = new JwtManager(getApplicationContext());
         String jwtToken = jwtManager.getStoredJwtToken();
-
         return jwtToken != null && !jwtToken.isEmpty();
     }
+
 }

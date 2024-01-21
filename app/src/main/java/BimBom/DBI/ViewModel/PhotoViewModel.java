@@ -28,6 +28,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PhotoViewModel extends ViewModel {
     private SSLContext context1;
     private Context context;
+    public PhotoViewModel(Context context) {
+        this.context = context;
+    }
+    public PhotoViewModel() {
+
+    }
     private X509TrustManager trustManager;
     private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
     private MutableLiveData<Boolean> progressBarVisibility = new MutableLiveData<>();
