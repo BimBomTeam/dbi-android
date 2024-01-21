@@ -3,6 +3,7 @@ package BimBom.DBI.ViewModel;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -45,6 +46,15 @@ public class PhotoViewModel extends ViewModel {
     }
     public MutableLiveData<IdentifyResponseDto> getIdentifyResponseLiveData() {
         return identifyResponseLiveData;
+    }
+    public void clear() {
+        context1 = null;
+        trustManager = null;
+        uploadStatus.setValue(null);
+        progressBarVisibility.setValue(null);
+        responseFromServer.setValue(null);
+        identifyResponseLiveData.setValue(null);
+        errorLiveData.setValue(null);
     }
     public MutableLiveData<Boolean> getProgressBarVisibility() {
         return progressBarVisibility;
@@ -89,6 +99,7 @@ public class PhotoViewModel extends ViewModel {
                 }
                 progressBarVisibility.setValue(false);
             }
+
 
             @Override
             public void onFailure(Call<IdentifyResponseDto> call, Throwable t) {

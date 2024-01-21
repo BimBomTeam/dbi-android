@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private Dialog progressDialog, infoDialog;
     private MenuItem menu_item_login, menu_item_settings, menu_item_help, menu_item_user;
     public Intent dogBreedIntent;
-    public boolean strartDownload = false;
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -75,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setContentView(R.layout.activity_main);
         initializeViews();
         dogBreedIntent = new Intent(MainActivity.this, DogBreedActivity.class);
-        setupViewModelObservers();
     }
 
     private void initializeViews() {
@@ -133,26 +132,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         view.setOnClickListener(listener);
     }
 
-    private void setupViewModelObservers() {
-        PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
-        photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
-            if (identifyResponseDto != null) {
-                strartDownload = true;
-                if (strartDownload) {
-                    progressDialog.dismiss();
-                    dogBreedIntent.putExtra("dogName", identifyResponseDto.name);
-                    dogBreedIntent.putExtra("dogDescription", identifyResponseDto.description);
-                    startActivity(dogBreedIntent);
-                }
-            }
-        });
-        photoViewModel.getErrorLiveData().observe(this, errorMessage -> {
-            if (errorMessage != null) {
-                progressDialog.dismiss();
-                Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     private void setNavigationViewListener() {
         nvMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -189,17 +168,44 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         if (photo != null) {
             progressDialog.show();
             PhotoModel photoModel = new PhotoModel(unscaledPhoto);
-            PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
             Pair<SSLContext, X509TrustManager> sslPair = SslHelper.createSSLContext(getApplicationContext());
             SSLContext sslContext = sslPair.first;
             X509TrustManager trustManager = sslPair.second;
+
+            PhotoViewModel photoViewModel = new ViewModelProvider(this).get(PhotoViewModel.class);
             photoViewModel.setSslContext(sslContext);
             photoViewModel.setTrustManager(trustManager);
             photoViewModel.setPhoto(photoModel);
+
+            photoViewModel.getIdentifyResponseLiveData().observe(this, identifyResponseDto -> {
+                if (identifyResponseDto != null) {
+                    if ("-1".equals(identifyResponseDto.getId())) {
+                        imageView.setImageResource(R.drawable.logo1);
+                        btnUpload.setEnabled(false);
+                        setButtonTextBasedOnState(btnUpload);
+                        progressDialog.dismiss();
+                        infoDialog.show();
+                        btnOk.setOnClickListener(v -> {
+                            infoDialog.dismiss();
+                            photoViewModel.clear();
+                        });
+                    } else {
+                        imageView.setImageResource(R.drawable.logo1);
+                        btnUpload.setEnabled(false);
+                        setButtonTextBasedOnState(btnUpload);
+                        progressDialog.dismiss();
+                        dogBreedIntent.putExtra("dogName", identifyResponseDto.name);
+                        dogBreedIntent.putExtra("dogDescription", identifyResponseDto.description);
+                        startActivity(dogBreedIntent);
+                        photoViewModel.clear();
+                    }
+                }
+            });
         } else {
             Toast.makeText(MainActivity.this, R.string.photo_selected, Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void onClickButtonHistory(View view) {
         if (!isUserLoggedIn()) {
@@ -270,6 +276,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     unscaledPhoto = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     setScaledImage(photo);
+
+                    // Enable the btnUpload button when an image is loaded
+                    btnUpload.setEnabled(true);
+                    setButtonTextBasedOnState(btnUpload);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -358,5 +368,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         String jwtToken = jwtManager.getStoredJwtToken();
         return jwtToken != null && !jwtToken.isEmpty();
     }
-
+    private void setButtonTextBasedOnState(Button btnUpload){
+        if (btnUpload.isEnabled()){
+            btnUpload.setText(getString(R.string.button_enabled));
+        }
+        else{
+            btnUpload.setText(getString(R.string.button_disabled));
+        }
+    }
 }
