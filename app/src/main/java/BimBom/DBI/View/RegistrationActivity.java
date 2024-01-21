@@ -1,6 +1,7 @@
 package BimBom.DBI.View;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button btnSign, btnBack, btnOk;
     private Dialog registrationDialog;
     private AuthViewModel authViewModel;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +39,9 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
 
         initializeViews();
-        setupFirebaseAuth();
         setupFieldListeners();
         setupButtonClickListeners();
+        setupLoginDialog();
     }
 
     private void initializeViews() {
@@ -62,9 +64,7 @@ public class RegistrationActivity extends AppCompatActivity {
         tvInfo = registrationDialog.findViewById(R.id.tvInfo);
     }
 
-    private void setupFirebaseAuth() {
-        firebaseAuth = FirebaseAuth.getInstance();
-    }
+
 
     private void setupButtonClickListeners() {
         btnSign.setOnClickListener(v -> {
@@ -173,19 +173,39 @@ public class RegistrationActivity extends AppCompatActivity {
     private void register() {
         String email = emailET.getText().toString().trim();
         String password = passwordET.getText().toString().trim();
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        authViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(AuthViewModel.class);
+        authViewModel.setContext(getApplicationContext());
         authViewModel.registerUser(email, password);
+        authViewModel.getLoginResponseLiveData().observe(this, loginResponseDto -> {
+            if (loginResponseDto != null) {
+                handleSuccessfulLogin();
+            } else {
+                handleFailedLogin();
+            }
+        });
     }
 
-    private void handleRegistrationSuccess() {
-        tvInfo.setText(getString(R.string.login_succesfull));
+    private void setupLoginDialog() {
+        registrationDialog = new Dialog(this);
+        registrationDialog.setContentView(R.layout.info_dialog);
+
+        if (registrationDialog.getWindow() != null) {
+            Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
+            registrationDialog.getWindow().setBackgroundDrawable(drawable);
+        }
+
+        btnOk = registrationDialog.findViewById(R.id.btnOk);
+        tvInfo = registrationDialog.findViewById(R.id.tvInfo);
+    }
+    private void handleSuccessfulLogin() {
+        tvInfo.setText(getString(R.string.SIGN_UP));
         registrationDialog.show();
-        btnOk.setOnClickListener(v -> {
-            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            finish();
-        });
+        btnOk.setOnClickListener(v -> finish());
+    }
+    private void handleFailedLogin() {
+        tvInfo.setText(R.string.login_error);
+        registrationDialog.show();
+        btnOk.setOnClickListener(v -> registrationDialog.dismiss());
     }
 
     private void handleRegistrationFailure() {

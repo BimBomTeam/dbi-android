@@ -3,13 +3,12 @@ package BimBom.DBI.Model.Dto;
 import java.util.List;
 
 public class ErrorLoginDto {
-    private int code;
-    private String message;
-    private List<ErrorDetail> errors;
+    private String error;
 
-    public static class ErrorDetail {
-        private String message;
-        private String domain;
-        private String reason;
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String errorBodyString) {
     }
 }

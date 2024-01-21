@@ -1,8 +1,11 @@
 package BimBom.DBI.ViewModel;
 
+import static java.security.AccessController.getContext;
+
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,6 +13,9 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -105,10 +111,9 @@ public class AuthViewModel extends ViewModel {
                         jwtManager.saveJwtTokenToPreferences(jwtToken);
                         String storedToken = jwtManager.getJwtToken();
                         Log.d("logingit", "JWT token: " + storedToken+response.code());
-
                     }
                 } else {
-                    uploadStatus.setValue("Błąd podczas logowania. Kod: " + response.code());
+                    handleInvalidLoginError(response);
                 }
             }
 
@@ -119,6 +124,31 @@ public class AuthViewModel extends ViewModel {
             }
         });
     }
+    private void handleInvalidLoginError(Response<?> response) {
+        try {
+            String errorBodyString = response.errorBody().string();
+            Gson gson = new Gson();
+            ErrorLoginDto errorLoginDto;
+
+            try {
+                // Spróbuj sparsować jako obiekt JSON
+                errorLoginDto = gson.fromJson(errorBodyString, ErrorLoginDto.class);
+            } catch (JsonSyntaxException e) {
+                // Jeśli sparsowanie jako obiekt JSON nie powiedzie się, obsłuż jako string
+                errorLoginDto = new ErrorLoginDto();
+                errorLoginDto.setError(errorBodyString);
+            }
+
+            String errorMessage = errorLoginDto.getError();
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+            }
+        } catch (IOException e) {
+            Log.e("Error", "Błąd podczas przetwarzania błędu logowania: " + e.getMessage());
+            uploadStatus.setValue("Błąd podczas logowania. Kod: " + response.code());
+        }
+    }
+
     public void registerUser(String email, String password) {
         ConnectionServer connectionServer = ConnectionServer.getInstance(context);
         ApiService apiService = connectionServer.getApiService();
@@ -150,62 +180,6 @@ public class AuthViewModel extends ViewModel {
                 errorLiveData.setValue("Błąd podczas logowania: " + t.getMessage());
             }
         });
-    }
-
-    private void handleSuccessfulLogin(LoginResponseDto loginResponse) {
-        String jwtToken = loginResponse.getToken();
-        JwtManager jwtManager = new JwtManager(context);
-        jwtManager.saveJwtTokenToPreferences(jwtToken);
-        String storedToken = jwtManager.getJwtToken();
-        Log.d("logingit", "JWT token: " + storedToken);
-        // Dodatkowe czynności po udanym zalogowaniu
-    }
-
-    private void handleErrorResponse(Response<?> response) {
-        // Obsługa różnych typów błędów w zależności od kodu błędu
-        int errorCode = response.code();
-        switch (errorCode) {
-            case 400:
-                // Błąd związany z nieprawidłowymi danymi logowania
-                // Obsługa przy użyciu innego DTO, np. InvalidLoginResponseDto
-                handleInvalidLoginError(response);
-                break;
-            case 401:
-                // Błąd autentykacji
-                // Obsługa przy użyciu innego DTO, np. AuthenticationErrorDto
-                handleAuthenticationError(response);
-                break;
-            // Dodaj obsługę innych kodów błędów, jeśli to konieczne
-            default:
-                uploadStatus.setValue("Błąd podczas logowania. Kod: " + errorCode);
-                break;
-        }
-    }
-
-    private void handleInvalidLoginError(Response<?> response) {
-        try {
-            // Manually parse the error response body
-            String errorBodyString = response.errorBody().string();
-            Gson gson = new Gson(); // You can use your preferred JSON parsing library
-            ErrorLoginDto errorLoginDto = gson.fromJson(errorBodyString, ErrorLoginDto.class);
-
-            // Use information from invalidLoginResponse for additional error handling
-            // For example, you can get the error message using invalidLoginResponse.getMessage()
-        } catch (IOException e) {
-            Log.e("Error", "Błąd podczas przetwarzania błędu logowania: " + e.getMessage());
-            uploadStatus.setValue("Błąd podczas logowania. Kod: " + response.code());
-        }
-    }
-
-    private void handleAuthenticationError(Response<?> response) {
-        // Obsługa błędu autentykacji
-        // Możesz użyć innego DTO, np. AuthenticationErrorDto
-        // np. AuthenticationErrorDto authenticationError = (AuthenticationErrorDto) response.body();
-    }
-
-    private void handleFailure(Throwable t) {
-        Log.e("Error", "Błąd podczas logowania: " + t.getMessage());
-        errorLiveData.setValue("Błąd podczas logowania: " + t.getMessage());
     }
 
 
