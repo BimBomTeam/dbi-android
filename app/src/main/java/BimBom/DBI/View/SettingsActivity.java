@@ -1,18 +1,9 @@
 package BimBom.DBI.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import BimBom.DBI.R;
 import BimBom.DBI.Service.JwtManager;
 
@@ -73,28 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         btnDeleteAccount.setOnClickListener(v -> {
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-
-            if (currentUser != null) {
-                currentUser.delete()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                handleAccountDeletionSuccess();
-                            } else {
-                                handleAccountDeletionFailure();
-                            }
-                        });
-            }
+            Toast.makeText(SettingsActivity.this, R.string.in_develop, Toast.LENGTH_SHORT).show();
         });
-    }
-
-    private void handleAccountDeletionSuccess() {
-        Toast.makeText(SettingsActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
-        finish();
-    }
-
-    private void handleAccountDeletionFailure() {
-        Toast.makeText(SettingsActivity.this, R.string.account_deleted_error, Toast.LENGTH_SHORT).show();
     }
 }

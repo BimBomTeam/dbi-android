@@ -268,6 +268,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     photo = (Bitmap) extras.get("data");
                     unscaledPhoto = (Bitmap) extras.get("data");
                     setScaledImage(photo);
+                    btnUpload.setEnabled(true);
+                    setButtonTextBasedOnState(btnUpload);
                 }
 
             } else if (requestCode == REQUEST_GALLERY && data != null) {
@@ -276,8 +278,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     photo = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     unscaledPhoto = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
                     setScaledImage(photo);
-
-                    // Enable the btnUpload button when an image is loaded
                     btnUpload.setEnabled(true);
                     setButtonTextBasedOnState(btnUpload);
                 } catch (IOException e) {

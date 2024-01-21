@@ -4,20 +4,16 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import BimBom.DBI.Model.UserModel;
 import BimBom.DBI.R;
-import BimBom.DBI.Service.JwtManager;
 import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {
@@ -71,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         authViewModel.getErrorLiveData().observe(this, loginResponseDto -> {
-                handleFailedLogin();
+            handleFailedLogin();
         });
     }
 

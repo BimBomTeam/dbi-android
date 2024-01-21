@@ -1,7 +1,5 @@
 package BimBom.DBI.ViewModel;
 
-import static java.security.AccessController.getContext;
-
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
@@ -15,10 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 
 import BimBom.DBI.Model.Dto.ErrorLoginDto;
 import BimBom.DBI.Model.Dto.LoginResponseDto;
@@ -27,10 +22,8 @@ import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Service.ConnectionServer;
 import BimBom.DBI.Service.JwtManager;
 import BimBom.DBI.Model.UserModel;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Converter;
 import retrofit2.Response;
 
 public class AuthViewModel extends ViewModel {
@@ -46,7 +39,8 @@ public class AuthViewModel extends ViewModel {
     public MutableLiveData<Boolean> getLoginSuccessLiveData() {
         return loginSuccessLiveData;
     }
-    public MutableLiveData<String> getErrorLiveData(){
+
+    public MutableLiveData<String> getErrorLiveData() {
         return errorLiveData;
     }
 
@@ -114,7 +108,7 @@ public class AuthViewModel extends ViewModel {
                         jwtManager.saveJwtTokenToPreferences(jwtToken);
                         String storedToken = jwtManager.getJwtToken();
                         loginResponseLiveData.setValue(loginResponse);
-                        Log.d("logingit", "JWT token: " + storedToken+response.code());
+                        Log.d("logingit", "JWT token: " + storedToken + response.code());
                     }
                 } else {
                     errorLiveData.setValue("Invalid login credentials:");
@@ -129,6 +123,7 @@ public class AuthViewModel extends ViewModel {
             }
         });
     }
+
     private void handleInvalidLoginError(Response<?> response) {
         try {
             String errorBodyString = response.errorBody().string();
@@ -136,10 +131,8 @@ public class AuthViewModel extends ViewModel {
             ErrorLoginDto errorLoginDto;
 
             try {
-                // Spróbuj sparsować jako obiekt JSON
                 errorLoginDto = gson.fromJson(errorBodyString, ErrorLoginDto.class);
             } catch (JsonSyntaxException e) {
-                // Jeśli sparsowanie jako obiekt JSON nie powiedzie się, obsłuż jako string
                 errorLoginDto = new ErrorLoginDto();
                 errorLoginDto.setError(errorBodyString);
             }
@@ -172,7 +165,7 @@ public class AuthViewModel extends ViewModel {
                         jwtManager.saveJwtTokenToPreferences(jwtToken);
                         String storedToken = jwtManager.getJwtToken();
                         loginResponseLiveData.setValue(loginResponse);
-                        Log.d("logingit", "JWT token: " + storedToken+response.code());
+                        Log.d("logingit", "JWT token: " + storedToken + response.code());
                     }
                 } else {
                     errorLiveData.setValue("Invalid login credentials:");
