@@ -6,8 +6,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import BimBom.DBI.Model.Dto.IdentifyResponseDto;
 import BimBom.DBI.R;
 
 public class DogBreedActivity extends AppCompatActivity {
@@ -21,7 +23,6 @@ public class DogBreedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_breed);
         initializeViews();
-        setupWebView();
         displayDogInformation();
         setButtonClickListeners();
     }
@@ -33,8 +34,8 @@ public class DogBreedActivity extends AppCompatActivity {
         tvDescription = findViewById(R.id.tvDescription);
     }
 
-    private void setupWebView() {
-        webView.loadUrl("http://193.122.12.41/image.png");
+    private void setupWebView(String avatarLink) {
+        webView.loadUrl("http://193.122.12.41/" + avatarLink);
         WebSettings webSettings = webView.getSettings();
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
@@ -50,6 +51,11 @@ public class DogBreedActivity extends AppCompatActivity {
         String dogDescription = getIntent().getStringExtra("dogDescription");
         if (dogDescription != null) {
             tvDescription.setText(dogDescription);
+        }
+
+        String avatarLink = getIntent().getStringExtra("avatarLink");
+        if (avatarLink != null) {
+            setupWebView(avatarLink);
         }
     }
 

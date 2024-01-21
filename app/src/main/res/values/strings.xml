@@ -57,7 +57,7 @@
     <string name="not_found">X509TrustManager not found</string>
     <string name="uploading">Uploading... Please wait</string>
     <string name="history">HISTORY</string>
-    <string name="dog_is_not_detected">Dog is not detected in the photo</string>
+    <string name="dog_is_not_detected">Dog is not found</string>
     <string name="in_develop">This function in develop</string>
     <string name="invalid_email">Invalid email</string>
     <string name="server_error">Server error</string>

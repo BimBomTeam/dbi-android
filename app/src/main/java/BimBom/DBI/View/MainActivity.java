@@ -196,13 +196,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                         progressDialog.dismiss();
                         dogBreedIntent.putExtra("dogName", identifyResponseDto.name);
                         dogBreedIntent.putExtra("dogDescription", identifyResponseDto.description);
+                        dogBreedIntent.putExtra("avatarLink", identifyResponseDto.avatarLink);
                         startActivity(dogBreedIntent);
                         photoViewModel.clear();
                     }
                 }
             });
-        } else {
-            Toast.makeText(MainActivity.this, R.string.photo_selected, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -368,11 +367,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         String jwtToken = jwtManager.getStoredJwtToken();
         return jwtToken != null && !jwtToken.isEmpty();
     }
-    private void setButtonTextBasedOnState(Button btnUpload){
-        if (btnUpload.isEnabled()){
+
+    private void setButtonTextBasedOnState(Button btnUpload) {
+        if (btnUpload.isEnabled()) {
             btnUpload.setText(getString(R.string.button_enabled));
-        }
-        else{
+        } else {
             btnUpload.setText(getString(R.string.button_disabled));
         }
     }
