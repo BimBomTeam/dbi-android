@@ -50,7 +50,7 @@
         android:layout_marginBottom="320dp"
         android:fontFamily="@font/julius_sans_one"
         android:text="@string/name"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle"
         app:layout_constraintEnd_toEndOf="parent"
