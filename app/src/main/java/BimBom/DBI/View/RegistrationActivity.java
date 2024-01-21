@@ -5,19 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import BimBom.DBI.R;
@@ -31,7 +29,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private Button btnSign, btnBack, btnOk;
     private Dialog registrationDialog;
     private AuthViewModel authViewModel;
-    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +38,6 @@ public class RegistrationActivity extends AppCompatActivity {
         initializeViews();
         setupFieldListeners();
         setupButtonClickListeners();
-        setupLoginDialog();
     }
 
     private void initializeViews() {
@@ -64,8 +60,6 @@ public class RegistrationActivity extends AppCompatActivity {
         tvInfo = registrationDialog.findViewById(R.id.tvInfo);
     }
 
-
-
     private void setupButtonClickListeners() {
         btnSign.setOnClickListener(v -> {
             if (checkFields()) {
@@ -80,20 +74,41 @@ public class RegistrationActivity extends AppCompatActivity {
         emailET.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 checkEmailField();
+                checkFields();
             }
         });
 
         passwordET.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 checkPasswordField();
+                checkFields();
             }
         });
 
         passwordRepeatET.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 checkPasswordField();
+                checkFields();
             }
         });
+
+        // Additional checkFields() on text change
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                checkFields();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        };
+
+        emailET.addTextChangedListener(textWatcher);
+        passwordET.addTextChangedListener(textWatcher);
+        passwordRepeatET.addTextChangedListener(textWatcher);
     }
 
     private boolean checkFields() {
@@ -104,34 +119,42 @@ public class RegistrationActivity extends AppCompatActivity {
         boolean fieldsValid = true;
 
         if (TextUtils.isEmpty(email)) {
-            emailET.setError(getString(R.string.email_is_empty));
+            setError(emailET, R.string.email_is_empty);
             fieldsValid = false;
         } else {
-            emailET.setError(null);
+            clearError(emailET);
         }
 
         if (TextUtils.isEmpty(password)) {
-            passwordET.setError(getString(R.string.password_is_empty));
+            setError(passwordET, R.string.password_is_empty);
+            fieldsValid = false;
+        } else if (!isSixCharacters(password)) {
+            setError(passwordET, R.string.password_should_be_six_characters);
             fieldsValid = false;
         } else {
-            passwordET.setError(null);
+            clearError(passwordET);
         }
 
         if (TextUtils.isEmpty(confirmPassword)) {
-            passwordRepeatET.setError(getString(R.string.password_same_is_empty));
+            setError(passwordRepeatET, R.string.password_same_is_empty);
+            fieldsValid = false;
+        } else if (!isSixCharacters(confirmPassword)) {
+            setError(passwordRepeatET, R.string.password_should_be_six_characters);
             fieldsValid = false;
         } else {
-            passwordRepeatET.setError(null);
+            clearError(passwordRepeatET);
         }
 
         boolean passwordsMatch = password.equals(confirmPassword);
 
         if (!passwordsMatch) {
-            passwordRepeatET.setError(getString(R.string.password_is_same));
+            setError(passwordRepeatET, R.string.password_is_same);
             fieldsValid = false;
         } else {
-            passwordRepeatET.setError(null);
+            clearError(passwordRepeatET);
         }
+
+        btnSign.setEnabled(fieldsValid);
 
         return fieldsValid;
     }
@@ -139,9 +162,11 @@ public class RegistrationActivity extends AppCompatActivity {
     private void checkEmailField() {
         String email = emailET.getText().toString().trim();
         if (TextUtils.isEmpty(email)) {
-            emailET.setError(getString(R.string.email_is_empty));
+            setError(emailET, R.string.email_is_empty);
+        } else if (!email.contains("@") || !email.contains(".")) {
+            setError(emailET, R.string.invalid_email);
         } else {
-            emailET.setError(null);
+            clearError(emailET);
         }
     }
 
@@ -150,20 +175,28 @@ public class RegistrationActivity extends AppCompatActivity {
         String confirmPassword = passwordRepeatET.getText().toString().trim();
 
         if (TextUtils.isEmpty(password)) {
-            passwordET.setError(getString(R.string.password_is_empty));
+            setError(passwordET, R.string.password_is_empty);
         } else if (!isSixCharacters(password)) {
-            passwordET.setError(getString(R.string.password_should_be_six_characters));
+            setError(passwordET, R.string.password_should_be_six_characters);
         } else {
-            passwordET.setError(null);
+            clearError(passwordET);
         }
 
         if (TextUtils.isEmpty(confirmPassword)) {
-            passwordRepeatET.setError(getString(R.string.password_is_same));
+            setError(passwordRepeatET, R.string.password_is_same);
         } else if (!isSixCharacters(confirmPassword)) {
-            passwordRepeatET.setError(getString(R.string.password_should_be_six_characters));
+            setError(passwordRepeatET, R.string.password_should_be_six_characters);
         } else {
-            passwordRepeatET.setError(null);
+            clearError(passwordRepeatET);
         }
+    }
+
+    private void setError(EditText editText, int errorMessageResId) {
+        editText.setError(getString(errorMessageResId));
+    }
+
+    private void clearError(EditText editText) {
+        editText.setError(null);
     }
 
     private boolean isSixCharacters(String text) {
@@ -180,37 +213,30 @@ public class RegistrationActivity extends AppCompatActivity {
             if (loginResponseDto != null) {
                 handleSuccessfulLogin();
             } else {
-                handleFailedLogin();
+                handleRegistrationFailure();
             }
         });
     }
 
-    private void setupLoginDialog() {
-        registrationDialog = new Dialog(this);
-        registrationDialog.setContentView(R.layout.info_dialog);
-
-        if (registrationDialog.getWindow() != null) {
-            Drawable drawable = getResources().getDrawable(R.drawable.rounded_login_dialog);
-            registrationDialog.getWindow().setBackgroundDrawable(drawable);
-        }
-
-        btnOk = registrationDialog.findViewById(R.id.btnOk);
-        tvInfo = registrationDialog.findViewById(R.id.tvInfo);
-    }
     private void handleSuccessfulLogin() {
         tvInfo.setText(getString(R.string.SIGN_UP));
         registrationDialog.show();
-        btnOk.setOnClickListener(v -> finish());
-    }
-    private void handleFailedLogin() {
-        tvInfo.setText(R.string.login_error);
-        registrationDialog.show();
-        btnOk.setOnClickListener(v -> registrationDialog.dismiss());
+        btnOk.setOnClickListener(v -> {
+            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void handleRegistrationFailure() {
-        tvInfo.setText(getString(R.string.login_succesfull_error));
+        tvInfo.setText(getString(R.string.registration_failed));
         registrationDialog.show();
-        btnOk.setOnClickListener(v -> registrationDialog.dismiss());
+        btnOk.setOnClickListener(v -> {
+            registrationDialog.dismiss();
+            setError(emailET, R.string.registration_failed);
+            setError(passwordET, R.string.registration_failed);
+            setError(passwordRepeatET, R.string.registration_failed);
+        });
     }
 }

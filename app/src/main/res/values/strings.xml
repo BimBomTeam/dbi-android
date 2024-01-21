@@ -45,7 +45,7 @@
     <string name="email_error">Enter a valid email address</string>
     <string name="error_loin_google">Google login error</string>
     <string name="Logged">LOGGED IN</string>
-    <string name="login_error">LOGIN ERROR</string>
+    <string name="login_error">INVALID LOGIN CREDENTIALS</string>
     <string name="deleted">Account deleted successfully</string>
     <string name="account_deleted_error">Failed to delete the account</string>
     <string name="logged_out">Logged out</string>
@@ -58,4 +58,5 @@
     <string name="history">HISTORY</string>
     <string name="dog_is_not_detected">Dog is not detected in the photo</string>
     <string name="in_develop">This function in develop</string>
+    <string name="invalid_email">Invalid email</string>
 </resources>

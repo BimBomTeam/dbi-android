@@ -46,6 +46,9 @@ public class AuthViewModel extends ViewModel {
     public MutableLiveData<Boolean> getLoginSuccessLiveData() {
         return loginSuccessLiveData;
     }
+    public MutableLiveData<String> getErrorLiveData(){
+        return errorLiveData;
+    }
 
     private MutableLiveData<LoginResponseDto> loginResponseLiveData = new MutableLiveData<>();
 
@@ -110,9 +113,11 @@ public class AuthViewModel extends ViewModel {
                         JwtManager jwtManager = new JwtManager(context);
                         jwtManager.saveJwtTokenToPreferences(jwtToken);
                         String storedToken = jwtManager.getJwtToken();
+                        loginResponseLiveData.setValue(loginResponse);
                         Log.d("logingit", "JWT token: " + storedToken+response.code());
                     }
                 } else {
+                    errorLiveData.setValue("Invalid login credentials:");
                     handleInvalidLoginError(response);
                 }
             }
@@ -166,10 +171,11 @@ public class AuthViewModel extends ViewModel {
                         JwtManager jwtManager = new JwtManager(context);
                         jwtManager.saveJwtTokenToPreferences(jwtToken);
                         String storedToken = jwtManager.getJwtToken();
+                        loginResponseLiveData.setValue(loginResponse);
                         Log.d("logingit", "JWT token: " + storedToken+response.code());
-
                     }
                 } else {
+                    errorLiveData.setValue("Invalid login credentials:");
                     uploadStatus.setValue("Błąd podczas logowania. Kod: " + response.code());
                 }
             }

@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         menu_item_login = findViewById(R.id.menu_item_login);
         menu_item_settings = findViewById(R.id.menu_item_settings);
         menu_item_help = findViewById(R.id.menu_item_help);
-        menu_item_user = nvMenu.getMenu().findItem(R.id.menu_item_user);
 
         setButtonClickListeners();
     }
@@ -154,30 +153,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         });
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateMenuUserEmail();
-    }
-
-    private void updateMenuUserEmail() {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            String userEmail = currentUser.getEmail();
-            if (userEmail != null) {
-                String[] splitEmail = userEmail.split("@");
-                if (splitEmail.length > 0) {
-                    String emailPrefix = splitEmail[0];
-                    menu_item_user.setTitle(emailPrefix);
-                    return;
-                }
-            }
-        }
-        menu_item_user.setTitle(getString(R.string.welcome));
-    }
-
     private void setNavigationViewListener() {
         nvMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -379,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private boolean isUserLoggedIn() {
-        JwtManager jwtManager = new JwtManager(this);
+        JwtManager jwtManager = new JwtManager(this); // 'this' refers to the context of MainActivity
         String jwtToken = jwtManager.getStoredJwtToken();
 
         return jwtToken != null && !jwtToken.isEmpty();

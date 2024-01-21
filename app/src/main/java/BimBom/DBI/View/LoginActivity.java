@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import BimBom.DBI.Model.UserModel;
 import BimBom.DBI.R;
+import BimBom.DBI.Service.JwtManager;
 import BimBom.DBI.ViewModel.AuthViewModel;
 
 public class LoginActivity extends AppCompatActivity {
@@ -67,9 +68,10 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.getLoginResponseLiveData().observe(this, loginResponseDto -> {
             if (loginResponseDto != null) {
                 handleSuccessfulLogin();
-            } else {
-                handleFailedLogin();
             }
+        });
+        authViewModel.getErrorLiveData().observe(this, loginResponseDto -> {
+                handleFailedLogin();
         });
     }
 

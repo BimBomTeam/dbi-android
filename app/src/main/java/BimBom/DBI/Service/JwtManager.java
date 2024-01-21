@@ -34,7 +34,7 @@ public class JwtManager {
 
 
     public String getStoredJwtToken() {
-        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences preferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         return preferences.getString(KEY_JWT_TOKEN, null);
     }
 

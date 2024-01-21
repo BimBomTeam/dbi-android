@@ -115,13 +115,14 @@
         android:layout_height="59dp"
         android:layout_marginBottom="140dp"
         android:background="@drawable/rounded_button_background"
-        android:enabled="true"
+        android:enabled="false"
         android:text="@string/SIGN_UP"
         app:layout_constraintBottom_toBottomOf="@+id/rectangle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/_bg__main_menu"
         app:layout_constraintVertical_bias="1.0"
+        tools:enabled="false"
         tools:ignore="MissingConstraints" />
 
     <EditText
