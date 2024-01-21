@@ -22,6 +22,7 @@ import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Service.ConnectionServer;
 import BimBom.DBI.Service.JwtManager;
 import BimBom.DBI.Model.UserModel;
+import BimBom.DBI.Service.TokenManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +68,7 @@ public class AuthViewModel extends ViewModel {
         JwtManager jwtManager = new JwtManager(context);
         jwtManager.saveJwtTokenToPreferences(jwtToken);
         String storedToken = jwtManager.getJwtToken();
+        TokenManager.setToken(storedToken);
         Log.d("logingit", "JWT token: " + storedToken);
 
         setLoginSuccess(true);

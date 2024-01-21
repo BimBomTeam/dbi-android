@@ -17,7 +17,7 @@ public class ConnectionServer {
 
 
     private ConnectionServer(Context context) {
-        this.context = context;
+
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -45,6 +45,7 @@ public class ConnectionServer {
         if (instance == null) {
             instance = new ConnectionServer(context);
         }
+
         return instance;
     }
 

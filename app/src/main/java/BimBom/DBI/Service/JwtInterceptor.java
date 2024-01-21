@@ -2,6 +2,7 @@ package BimBom.DBI.Service;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -20,7 +21,9 @@ public class JwtInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request originalRequest = chain.request();
-        String jwtToken = jwtManager.getStoredJwtToken();
+        String jwtToken = jwtManager.getJwtToken();
+
+        Log.d("interceptor", "Intercepting request with JWT token: " + jwtToken);
 
         if (jwtToken != null) {
             Request newRequest = originalRequest.newBuilder()

@@ -10,21 +10,26 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
+import BimBom.DBI.Model.Dto.HistoryDto;
 import BimBom.DBI.R;
+import BimBom.DBI.Service.HistoryCallback;
+import BimBom.DBI.ViewModel.HistoryViewModel;
 
 public class HistoryActivity extends AppCompatActivity {
     private Button btnBack;
     private RecyclerView recyclerView;
     private HistoryAdapter historyAdapter;
-
+    private HistoryViewModel historyViewModel;
+    private List<HistoryDto> dogList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,21 +55,25 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        List<Dog> dogList = generateSampleDogList();
-        historyAdapter = new HistoryAdapter(dogList, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(historyAdapter);
+        generateSampleDogList(historyList -> {
+
+            dogList = new ArrayList<>(historyList);
+            historyAdapter = new HistoryAdapter(dogList, this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(historyAdapter);
+
+        });
+
     }
 
-    private List<Dog> generateSampleDogList() {
-        List<Dog> sampleDogList = new ArrayList<>();
-        sampleDogList.add(new Dog("Labrador Retriever", "http://193.122.12.41/image.png","data"));
-        sampleDogList.add(new Dog("German Shepherd", "http://193.122.12.41/image.png","data"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
-        sampleDogList.add(new Dog("Golden Retriever", "http://193.122.12.41/image.png","data"));
-        return sampleDogList;
+    private void generateSampleDogList(HistoryCallback callback) {
+        historyViewModel = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication())).get(HistoryViewModel.class);
+        historyViewModel.setContext(getApplicationContext());
+        historyViewModel.loginUser(historyList -> {
+
+            ArrayList<HistoryDto> sampleDogList = new ArrayList<>(historyList);
+            callback.onHistoryLoaded(historyList);
+        });
     }
 
     private void setupItemTouchHelper() {

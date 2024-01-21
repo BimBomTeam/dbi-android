@@ -14,14 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import BimBom.DBI.Model.Dto.HistoryDto;
 import BimBom.DBI.R;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.DogViewHolder> {
 
-    private List<Dog> dogList;
+    private List<HistoryDto> dogList;
     private Context context;
 
-    public HistoryAdapter(List<Dog> dogList, Context context) {
+
+    public HistoryAdapter(List<HistoryDto> dogList, Context context) {
         this.dogList = dogList;
         this.context = context;
     }
@@ -35,9 +37,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.DogViewH
 
     @Override
     public void onBindViewHolder(@NonNull DogViewHolder holder, int position) {
-        Dog dog = dogList.get(position);
-        holder.dogBreedTextView.setText(dog.getDogBreed());
-        holder.dogDateTextView.setText(dog.getDogDate());
+        HistoryDto dog = dogList.get(position);
+        holder.dogBreedTextView.setText(dog.getDogBreedName());
+        holder.dogDateTextView.setText(dog.getCreatedDate().toString());
         WebSettings webSettings = holder.dogAvatarWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setUseWideViewPort(true);
@@ -45,13 +47,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.DogViewH
         webSettings.setTextZoom(100);
 
         holder.dogAvatarWebView.setWebViewClient(new WebViewClient());
-        holder.dogAvatarWebView.loadUrl(dog.getDogAvatar());
+        holder.dogAvatarWebView.loadUrl("http://193.122.12.41/"+dog.getAvatarLink());
+
     }
 
 
     @Override
     public int getItemCount() {
-        return dogList.size();
+        return dogList != null ? dogList.size() : 0;
     }
 
     public static class DogViewHolder extends RecyclerView.ViewHolder {
