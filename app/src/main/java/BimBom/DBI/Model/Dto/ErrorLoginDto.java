@@ -1,7 +1,4 @@
 package BimBom.DBI.Model.Dto;
-
-import java.util.List;
-
 public class ErrorLoginDto {
     private String error;
 

@@ -83,7 +83,7 @@ public class JwtManager {
                     urlConnection.disconnect();
                 }
             } catch (IOException e) {
-                Log.e(TAG, "Error fetching JWT token from server", e);
+                Log.e(TAG, "Error fetching JWT token from server", e);//to  do
             }
 
             return jwtToken;
@@ -93,9 +93,9 @@ public class JwtManager {
         protected void onPostExecute(String jwtToken) {
             if (jwtToken != null) {
                 saveJwtTokenToPreferences(jwtToken);
-                Log.d(TAG, "JWT token saved: " + jwtToken);
+                Log.d(TAG, "JWT token saved: " + jwtToken);//to  do
             } else {
-                Log.e(TAG, "Failed to retrieve JWT token from server");
+                Log.e(TAG, "Failed to retrieve JWT token from server");//to  do
             }
         }
 

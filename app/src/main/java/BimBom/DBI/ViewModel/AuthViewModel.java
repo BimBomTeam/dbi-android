@@ -16,6 +16,7 @@ import java.io.IOException;
 import BimBom.DBI.Model.Dto.ErrorLoginDto;
 import BimBom.DBI.Model.Dto.LoginResponseDto;
 import BimBom.DBI.Model.Dto.UserCredential;
+import BimBom.DBI.R;
 import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Service.ConnectionServer;
 import BimBom.DBI.Service.JwtManager;
@@ -117,7 +118,7 @@ public class AuthViewModel extends ViewModel {
             @Override
             public void onFailure(Call<LoginResponseDto> call, Throwable t) {
                 Log.e("Error", "Błąd podczas logowania: " + t.getMessage());
-                errorLiveData.setValue("Błąd podczas logowania: " + t.getMessage());
+                errorLiveData.setValue(R.string.error_login + t.getMessage());
             }
         });
     }
@@ -141,7 +142,7 @@ public class AuthViewModel extends ViewModel {
             }
         } catch (IOException e) {
             Log.e("Error", "Błąd podczas przetwarzania błędu logowania: " + e.getMessage());
-            uploadStatus.setValue("Błąd podczas logowania. Kod: " + response.code());
+            uploadStatus.setValue(context.getString (R.string.error_login_kod + response.code()));
         }
     }
 
@@ -167,14 +168,14 @@ public class AuthViewModel extends ViewModel {
                     }
                 } else {
                     errorLiveData.setValue("Invalid login credentials:");
-                    uploadStatus.setValue("Błąd podczas logowania. Kod: " + response.code());
+                    uploadStatus.setValue( context.getString(R.string.error_login_kod)+ response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponseDto> call, Throwable t) {
                 Log.e("Error", "Błąd podczas logowania: " + t.getMessage());
-                errorLiveData.setValue("Błąd podczas logowania: " + t.getMessage());
+                errorLiveData.setValue(R.string.error_login  + t.getMessage());
             }
         });
     }

@@ -62,4 +62,9 @@
     <string name="invalid_email">Invalid email</string>
     <string name="server_error">Server error</string>
     <string name="empty_history">History is empty</string>
+    <string name="error_login">Błąd podczas logowania:</string>
+    <string name="error_login_kod">Błąd podczas logowania. Kod</string>
+    <string name="error_history_loading"> Błąd podczas ładowania historii</string>
+    <string name="error_photo_loading">Błąd podczas przesyłania zdjęcia:</string>
+    <string name="error_photo_loading_kod"> Błąd podczas przesyłania zdjęcia. Kod</string>
 </resources>
