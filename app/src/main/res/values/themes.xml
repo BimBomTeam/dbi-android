@@ -1,9 +1,22 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AndroidDBI" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- main_menu styles -->
 
-    <style name="Theme.AndroidDBI" parent="Base.Theme.AndroidDBI" />
+    <style name="Theme.AndroidDBI" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="Theme.AndroidDBI.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.AndroidDBI.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.AndroidDBI.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!-- res/values/styles.xml -->
+    <style name="JuliusSansOneText">
+        <item name="android:fontFamily">@font/julius_sans_one</item>
+        <item name="android:textColor">@color/greenColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
