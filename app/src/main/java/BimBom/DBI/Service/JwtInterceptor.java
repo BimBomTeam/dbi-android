@@ -23,7 +23,7 @@ public class JwtInterceptor implements Interceptor {
         Request originalRequest = chain.request();
         String jwtToken = jwtManager.getJwtToken();
 
-        Log.d("interceptor", "Intercepting request with JWT token: " + jwtToken);
+        Log.d("interceptor", "Intercepting request with JWT token: " + jwtToken);//to  do
 
         if (jwtToken != null) {
             Request newRequest = originalRequest.newBuilder()

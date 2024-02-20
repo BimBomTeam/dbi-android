@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.List;
 
 import BimBom.DBI.Model.Dto.HistoryDto;
+import BimBom.DBI.R;
 import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Service.ConnectionServer;
 import BimBom.DBI.Service.HistoryCallback;
@@ -52,14 +53,14 @@ public class HistoryViewModel extends ViewModel {
                     }
                 } else {
                     Log.e("HistoryViewModel", "Błąd odpowiedzi HTTP: " + response.code());
-                    errorLiveData.setValue("Błąd podczas ładowania historii" + response.message());
+                    errorLiveData.setValue(R.string.error_history_loading + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<List<HistoryDto>> call, Throwable t) {
                 Log.e("Error", "Błąd podczas logowania: " + t.getMessage());
-                errorLiveData.setValue("Błąd podczas ładowania historii" + t.getMessage());
+                errorLiveData.setValue(R.string.error_history_loading+ t.getMessage());
             }
         });
     }

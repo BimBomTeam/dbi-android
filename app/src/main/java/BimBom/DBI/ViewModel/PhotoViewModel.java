@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.X509TrustManager;
 
+import BimBom.DBI.R;
 import BimBom.DBI.Service.ApiService;
 import BimBom.DBI.Model.Dto.IdentifyRequestDto;
 import BimBom.DBI.Model.Dto.IdentifyResponseDto;
@@ -25,11 +26,8 @@ public class PhotoViewModel extends ViewModel {
     public PhotoViewModel(Context context) {
         this.context = context;
     }
-
     public PhotoViewModel() {
-
     }
-
     private X509TrustManager trustManager;
     private MutableLiveData<String> uploadStatus = new MutableLiveData<>();
     private MutableLiveData<Boolean> progressBarVisibility = new MutableLiveData<>();
@@ -94,16 +92,14 @@ public class PhotoViewModel extends ViewModel {
                     IdentifyResponseDto identifyResponseDto = response.body();
                     identifyResponseLiveData.setValue(identifyResponseDto);
                 } else {
-                    uploadStatus.setValue("Błąd podczas przesyłania zdjęcia. Kod: " + response.code());
+                    uploadStatus.setValue(context.getString(R.string.error_photo_loading_kod ) + response.code());
                 }
                 progressBarVisibility.setValue(false);
             }
-
-
             @Override
             public void onFailure(Call<IdentifyResponseDto> call, Throwable t) {
                 Log.e("Error", "Błąd podczas przesyłania zdjęcia: " + t.getMessage());
-                errorLiveData.setValue("Błąd podczas przesyłania zdjęcia: " + t.getMessage());
+                errorLiveData.setValue(R.string.error_photo_loading + t.getMessage());
                 progressBarVisibility.setValue(false);
             }
         });

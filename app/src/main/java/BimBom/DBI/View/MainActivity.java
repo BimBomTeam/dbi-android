@@ -105,12 +105,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             Drawable drawable = getResources().getDrawable(R.drawable.rounded_progress_dialog);
             infoDialog.getWindow().setBackgroundDrawable(drawable);
         }
-
         btnOk = infoDialog.findViewById(R.id.btnOk);
         tvInfo = infoDialog.findViewById(R.id.tvInfo);
         tvInfo.setText(getString(R.string.dog_is_not_detected));
     }
-
     private void setButtonClickListeners() {
         setClickListener(btnUpload, this::onClickButtonUpload);
         setClickListener(btnHistory, this::onClickButtonHistory);
