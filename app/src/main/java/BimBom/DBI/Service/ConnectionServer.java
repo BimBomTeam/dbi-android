@@ -23,8 +23,8 @@ public class ConnectionServer {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder clientBuilder = UnsafeOkHttpClient.getUnsafeOkHttpClient().newBuilder();
-        clientBuilder.readTimeout(100, TimeUnit.SECONDS);
-        clientBuilder.writeTimeout(100, TimeUnit.SECONDS);
+        clientBuilder.readTimeout(90, TimeUnit.SECONDS);
+        clientBuilder.writeTimeout(90, TimeUnit.SECONDS);
 
         JwtInterceptor jwtInterceptor = new JwtInterceptor(context);
         clientBuilder.addInterceptor(jwtInterceptor);
